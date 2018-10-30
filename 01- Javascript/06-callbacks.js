@@ -1,48 +1,101 @@
 // 06-callbacks.js
 
+const fs = require('fs');
 
-const fs = require('fs')
-console.log('inicio');
-fs.readFile('06-texto.txt', //nombreArchivo
+console.log('Inicio');
+fs.readFile(
+    '06-texto.txt', // nombreArchivo
     'utf-8',
-
-
     (error, textoLeidoDelArchivo) => {
-
         if (error) {
-
-            try {
+            try{
                 throw new Error(error);
-
-
             } catch (e) {
                 console.log(e)
             }
 
-        }
-        else {
-
-
+        } else {
+            // AQUI
+            console.log('Inicio2');
             fs.writeFile(
                 '06-texto.txt',
-                textoLeidoDelArchivo + 'mundo',
-                (err) => {
-                    if (err) console.log('Error');
+                textoLeidoDelArchivo + 'Mundo',
+                (err)=>{
+                    if(err) console.log('Error');
                     console.log('Archivo actualizado');
 
+                    // CALLBACK HELL!!!!
+
+                    fs.writeFile(
+                        '06-texto.txt',
+                        textoLeidoDelArchivo + 'Mundo',
+                        (err)=>{
+                            if(err) console.log('Error');
+                            console.log('Archivo actualizado');
+                            fs.writeFile(
+                                '06-texto.txt',
+                                textoLeidoDelArchivo + 'Mundo',
+                                (err)=>{
+                                    if(err) console.log('Error');
+                                    console.log('Archivo actualizado');
+                                    fs.writeFile(
+                                        '06-texto.txt',
+                                        textoLeidoDelArchivo + 'Mundo',
+                                        (err)=>{
+                                            if(err) console.log('Error');
+                                            console.log('Archivo actualizado');
+                                            fs.writeFile(
+                                                '06-texto.txt',
+                                                textoLeidoDelArchivo + 'Mundo',
+                                                (err)=>{
+                                                    if(err) console.log('Error');
+                                                    console.log('Archivo actualizado');
+                                                    fs.writeFile(
+                                                        '06-texto.txt',
+                                                        textoLeidoDelArchivo + 'Mundo',
+                                                        (err)=>{
+                                                            if(err) console.log('Error');
+                                                            console.log('Archivo actualizado');
+                                                            fs.writeFile(
+                                                                '06-texto.txt',
+                                                                textoLeidoDelArchivo + 'Mundo',
+                                                                (err)=>{
+                                                                    if(err) console.log('Error');
+                                                                    console.log('Archivo actualizado');
+                                                                    fs.writeFile(
+                                                                        '06-texto.txt',
+                                                                        textoLeidoDelArchivo + 'Mundo',
+                                                                        (err)=>{
+                                                                            if(err) console.log('Error');
+                                                                            console.log('Archivo actualizado');
+                                                                            fs.writeFile(
+                                                                                '06-texto.txt',
+                                                                                textoLeidoDelArchivo + 'Mundo',
+                                                                                (err)=>{
+                                                                                    if(err) console.log('Error');
+                                                                                    console.log('Archivo actualizado');
+                                                                                }
+                                                                            );
+                                                                        }
+                                                                    );
+                                                                }
+                                                            );
+                                                        }
+                                                    );
+                                                }
+                                            );
+                                        }
+                                    );
+                                }
+                            );
+                        }
+                    );
 
                 }
             );
-
-            //aqui
-            //  console.log(textoLeidoDelArchivo);
-
+            console.log('Fin2');
         }
     }
 );
 
-//aqui
-
-
-console.log('fin');
-
+console.log('Fin');
