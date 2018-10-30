@@ -11,21 +11,37 @@ fs.readFile('06-texto.txt', //nombreArchivo
 
         if (error) {
 
-            try{
+            try {
                 throw new Error(error);
 
 
-            }catch (e) {
+            } catch (e) {
                 console.log(e)
             }
 
         }
-        else{
-            console.log(textoLeidoDelArchivo);
+        else {
+
+
+            fs.writeFile(
+                '06-texto.txt',
+                textoLeidoDelArchivo + 'mundo',
+                (err) => {
+                    if (err) console.log('Error');
+                    console.log('Archivo actualizado');
+
+
+                }
+            );
+
+            //aqui
+            //  console.log(textoLeidoDelArchivo);
 
         }
     }
 );
+
+//aqui
 
 
 console.log('fin');
