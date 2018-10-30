@@ -62,9 +62,124 @@ function saludar(nombre, funcionMensajeria) {
 
 }
 
-saludar("vinicio",imprimirEnConsola())
+saludar("vinicio", imprimirEnConsola())
+
 
 function imprimirEnConsola(texto) {
     console.log("texto");
 
 }
+
+
+//var
+var variable = 'valor';//nunca mas
+
+//dos diferentes formas
+
+let edad = 29; //mutar el objecto
+edad = 30;
+
+const casado = false; //Inmutable no puede ser reasignada numeros, string
+
+
+//siempre usar const en todo lo que se pueda
+
+const mascotas = {}
+mascotas.cachetes = 'Cachetes';
+mascotas.numero = 1;
+delete mascotas.numero;
+
+
+const carros = [];
+
+carros[0] = 123;
+carros.push('final')
+carros.pop();
+
+// anonymous functions
+
+
+//una funcion sin nombre
+//asignar una varible
+const saludarV2 = function () {
+    //implementacion
+
+};
+
+saludarV2();
+
+
+//asignar como metodo para obkectos
+const usuario = {
+
+
+    nombre: 'Vinicio',
+    saluar: function () {
+        return this.nombre
+    }
+};
+
+
+//enviar como parametros
+saluar("Vinicio", function (texto) {
+    console.log(texto)
+})
+
+
+//anonymous function envez utilizamos fat arrow functions -> => funciones de flecha gorda
+
+
+const saludarV3 = () => {
+//implementacion
+};
+saludarV3();
+
+
+const usuarioV2 = {
+    nombre: 'Vinicio',
+    saluar: () => {
+
+    }
+};
+
+
+//
+
+saludar("vinicio",  (texto) => {
+    console.log(isSecureContext)
+});
+
+
+
+const sumarDosNumerosV2 = function (numeroUno, numeroDos) {
+    return numeroDos + numeroUno
+
+};
+
+
+const sumarDosNumerosV3 = (numeroUno, numeroDos) => numeroUno+numeroDos;
+
+const saludarV5 = saludo =>console.log(saludo);
+
+const saludarV6 = saludo =>{
+
+    return console.log(saludo)
+
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
