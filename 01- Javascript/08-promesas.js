@@ -74,6 +74,25 @@ promesa('07-texto.txt')
 
 const fs = require('fs');
 
+const promesaEscritura = (nombreArchivo,
+                          contenidoArchivo) =>{
+    return new Promise(
+        (resolve, reject) => {
+            fs.writeFile(
+                nombreArchivo,contenidoArchivo,
+                (error)=>{
+                    if(error){
+                        reject(error)
+                    }
+                    else {
+                        resolve(contenidoArchivo)
+                    }
+                }
+            );
+        }
+    )};
+
+
 
 const appendFile = (nombreArchivo, contenidoArchivo) => {
     return new Promise(
