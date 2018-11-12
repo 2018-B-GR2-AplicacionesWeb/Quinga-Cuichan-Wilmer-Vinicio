@@ -169,3 +169,5 @@ ejercicio(['A', 'B', 'C'],
 
     }
 );
+
+//callback devolver una respuesta asincrona

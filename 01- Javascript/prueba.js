@@ -1,155 +1,91 @@
-//07-callback-propio.js
-const fs = require('fs');
+//08-promosas.js
 
-let contenidoFinal = 'Inicial';
+//promesa es una instancia de una clase que se llama Promise();
+//la promesa recibe una funcion anonima
 
-function appendFile(nombreArchivo,
-                    contenidoArchivo,
-                    callbacks) {
-    //1-> leer archivo
-    //2.1-> concatenamos el contenido
-    //2.2-> Creamos el archivo
+//la promesa recibe 2 parametros resolve and reject
 
-    //recibe el nombre del archivo, la codificacion UTF-8
-    //y el callbacks}
-    //readFile lee el archivo
-    fs.readFile(
-        nombreArchivo,
-        'utf-8',
-        //callback
-        (error, contenidoLeido) => {
-            if (error) {
-                //escribir el archivo
-                const contenido = contenidoArchivo;
-
-                //escribir el archivo 2 parametros
-                //nombre del archivo, contenido y callbacks
-                fs.writeFile(
-                    nombreArchivo,
-                    contenido,
-                    (err) => {
-
-                        if (err) {
-                            //console.log('Error', err)
-                            callbacks(err);
-
-                        }
-                        else {
-                            //devolvel algo que pasa en el futuro
-                            //devolver el contenido del archivo
-                            //para devolver algo que esta en un callback
-                            //mediante un otro callbacks
-
-                            //un callback
-                            //devolvemos como segundo parametro el contenido
-                            callbacks(undefined, contenido);
+//mientras no se ejecute el resolve no ejecuta el punto .then
+//mientras no se ejecute el reject no ejecuta el punto .catch
 
 
-                        }
+/*
 
-
-                    }
-                );
-
-
-            }
-            else {
-                //concatenamos
-                const contenido = contenidoLeido + contenidoArchivo;
-
-                fs.writeFile(
-                    nombreArchivo,
-                    contenido,
-                    (err) => {
-
-                        //al momento de escribir da un error
-                        if (err) {
-                            callbacks(err);
-                        }
-                        else {
-
-                            callbacks(undefined, contenido);
-
-                        }
-
-
-                    }
-                );
-
-
-            }
-
-
+//ejecutando una promesa dentro de una funcion anonima
+const promesa = () => {
+    return new Promise(
+        (resolve, reject) => {
+             resolve(10); //se ejecuta el then
+            // reject(); //se ejecuta el catch
         }
     );
+};
 
-}
-
-/*appendFile(
-    '07-texto.txt',
-    '\nAdios',
-    //un callback para devolver la respueta,
-    //una llamada despues de terminar la funcion
-    (error, contenidoTexto) => {
-
-        if (error) {
-            console.log(error)
+//toda promesa tiene un then y catch asincrona
+console.log(promesa);
+promesa()
+//estas funciones reciven una funcion como parametros
+    .then(
+        //se ejecuatan las cosas cuando estan bien
+        //enviar datos desde resolve y los visualiza el then
+        (numero) => {
+            console.log('ok', numero)
         }
-        else {
-            console.log(contenidoTexto)
+    )
+    .catch(
+        //se ejecuatan las cosas cuando no estan bien
+        () => {
+            console.log('Mal')
         }
-    });*/
+    );*/
+//con las promesas ya no se enviar callbacks
+/////////////////////////////////////
+//promesa para leer un archivo
+const fs = require('fs');
 
 
-//el callback devolver algo que se ejecuta en el futuro
-//para devolver una repuesta asincrona
-
-////////////////////////////////////////////////////////////////////////////
+//con promesas ya no se envia callbacks
+//ahora se tiene el then y catch
 
 
-//['A','B','C']
+const promesa = (nombreArchivo) => {
+    return new Promise(
+        (resolve, reject) => {
+            fs.readFile(
+                nombreArchivo,
+                'utf-8',
+                (error, contenidoLeido) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        resolve(contenidoLeido);
+                    }
+                }
+            );
+        }
+    );
+};
 
-//0-A.txt 'A'
-//1-B.txt 'B'
-//2-C.txt 'C'
-
-//devolver una arreglo con este tipo de respueta
 
 
-//devolver un arreglo de respuestas
-//[respuesta, respuesta, respuesta]
-//cada vez que se cree un archivo se agrega al arreglo
-//metodo para agregar un elemento al arreglo un push
 
-function ejercicio(arregloStrings,
-                   callback) {
+//escribir archivos
+const promesaEscritura = (nombreArchivo,
+                          contenidoArchivo) => {
+    return new Promise(
+        (resolve, reject) => {
 
-    const arregloRespuestas = [];
-
-    //recorrer el arreglo con el forEach
-    arregloStrings.forEach(
-        (string, indice) => {
-            const nombreArchivo = `${indice}-${string}.txt`;//nombre del archivo
-            const contenidoArchivo = string;//contenido del archivo
-
-            //escribir el archivo y guardale con el contenido
+            //funcion para leer un archivo
             fs.writeFile(
                 nombreArchivo,
                 contenidoArchivo,
-                //callback error
-                (err) => {
-                    const respuesta = {
-                        nombreArchivo: nombreArchivo,
-                        contenidoArchivo: contenidoArchivo,
-                        erro: err
-                    };
-                    //al arreglo de respuesta se le agrega la respuesta
-                    //con el push
-                    arregloRespuestas.push(respuesta);
-                    //si el tamano del arreglo de strings es igual al tamaño de arreglo de respuestas
-                    const terminoElArreglo = arregloStrings.length === arregloRespuestas.length
-                    if (terminoElArreglo) {
-                        callback(arregloRespuestas);
+                //callback
+                (error) => {
+                    if (error) {
+                        reject(error);
+                    }
+                    else {
+                        resolve(contenidoArchivo);
 
                     }
 
@@ -160,12 +96,36 @@ function ejercicio(arregloStrings,
 
         }
     );
-}
+};
 
-ejercicio(['A', 'B', 'C'],
 
-    (arregloRespuestas) => {
-        console.log(arregloRespuestas);
+//ejecutar la funcion
+promesa('07-texto.txt')
+    .then(
+        (contenido) => {
 
-    }
-);
+            console.log('ok', contenido);
+            //en el return lo unica se devulve una promesa
+
+            return promesaEscritura('07-texto.txt',
+               contenido + 'Nuevo Contenido' )
+
+
+        }
+    )
+
+    // se puede concatenar promesas
+    .then(
+        (contenidoCompleto)=>{
+            console.log(contenidoCompleto);
+
+
+        }
+
+
+    )
+    .catch(
+        (error) => {
+            console.log('Mal', error);
+        }
+    );
