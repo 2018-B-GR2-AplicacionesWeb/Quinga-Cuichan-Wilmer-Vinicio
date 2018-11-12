@@ -1,78 +1,81 @@
-//07-callback-propios.js
-
-//la funcion acepta el nombre del archivo y el contenido del archivo
-
-
+//07-callback-propio.js
 const fs = require('fs');
 
 let contenidoFinal = 'Inicial';
 
 function appendFile(nombreArchivo,
                     contenidoArchivo,
-                    callback
-) {
-
+                    callbacks) {
     //1-> leer archivo
-    //2-> concatenamos el contenido
-    //3-> si no existe se crea el archivo
+    //2.1-> concatenamos el contenido
+    //2.2-> Creamos el archivo
 
+    //recibe el nombre del archivo, la codificacion UTF-8
+    //y el callbacks}
+    //readFile lee el archivo
     fs.readFile(
         nombreArchivo,
         'utf-8',
+        //callback
         (error, contenidoLeido) => {
-
             if (error) {
-                //cuando no exite se escribe el archviC
+                //escribir el archivo
                 const contenido = contenidoArchivo;
-                //se escribe el archivo
-                fs.writeFile(
-                    nombreArchivo,//nombre del archivo
-                    contenido,//contenido del archivo
-                    //y el callback
-                    (err) => {
-                        if (err) {
 
-                            callback(err);
+                //escribir el archivo 2 parametros
+                //nombre del archivo, contenido y callbacks
+                fs.writeFile(
+                    nombreArchivo,
+                    contenido,
+                    (err) => {
+
+                        if (err) {
+                            //console.log('Error', err)
+                            callbacks(err);
 
                         }
                         else {
-                            //callbacks
-                            //devolver algo que ocurria en el fututo
-                            //return contenido; no se puede
-                            //no se puede   contenidoFinal=contenido;
-                            //cuando llegue el error esta undefined
-                            callback(undefined, contenido);
+                            //devolvel algo que pasa en el futuro
+                            //devolver el contenido del archivo
+                            //para devolver algo que esta en un callback
+                            //mediante un otro callbacks
+
+                            //un callback
+                            //devolvemos como segundo parametro el contenido
+                            callbacks(undefined, contenido);
+
 
                         }
 
+
                     }
                 );
+
+
             }
             else {
-                // cuando si existe concatenamos el contenido
+                //concatenamos
                 const contenido = contenidoLeido + contenidoArchivo;
 
-                //se escribe el archivo
                 fs.writeFile(
-                    nombreArchivo,//nombre del archivo
-                    contenido,//contenido del archivo
-                    //y el callback
+                    nombreArchivo,
+                    contenido,
                     (err) => {
 
-
+                        //al momento de escribir da un error
                         if (err) {
-                            callback(err);
-
+                            callbacks(err);
                         }
                         else {
 
-                            callback(undefined, contenido);
+                            callbacks(undefined, contenido);
 
                         }
 
 
                     }
                 );
+
 
             }
 
@@ -82,29 +85,87 @@ function appendFile(nombreArchivo,
 
 }
 
-appendFile('07-texto.txt',
+/*appendFile(
+    '07-texto.txt',
     '\nAdios',
+    //un callback para devolver la respueta,
+    //una llamada despues de terminar la funcion
     (error, contenidoTexto) => {
 
         if (error) {
             console.log(error)
         }
         else {
-            console.log(contenidoTexto);
+            console.log(contenidoTexto)
         }
+    });*/
+
+
+//el callback devolver algo que se ejecuta en el futuro
+//para devolver una repuesta asincrona
+
+////////////////////////////////////////////////////////////////////////////
+
+
+//['A','B','C']
+
+//0-A.txt 'A'
+//1-B.txt 'B'
+//2-C.txt 'C'
+
+//devolver una arreglo con este tipo de respueta
+
+
+//devolver un arreglo de respuestas
+//[respuesta, respuesta, respuesta]
+//cada vez que se cree un archivo se agrega al arreglo
+//metodo para agregar un elemento al arreglo un push
+
+function ejercicio(arregloStrings,
+                   callback) {
+
+    const arregloRespuestas = [];
+
+    //recorrer el arreglo con el forEach
+    arregloStrings.forEach(
+        (string, indice) => {
+            const nombreArchivo = `${indice}-${string}.txt`;//nombre del archivo
+            const contenidoArchivo = string;//contenido del archivo
+
+            //escribir el archivo y guardale con el contenido
+            fs.writeFile(
+                nombreArchivo,
+                contenidoArchivo,
+                //callback error
+                (err) => {
+                    const respuesta = {
+                        nombreArchivo: nombreArchivo,
+                        contenidoArchivo: contenidoArchivo,
+                        erro: err
+                    };
+                    //al arreglo de respuesta se le agrega la respuesta
+                    //con el push
+                    arregloRespuestas.push(respuesta);
+                    //si el tamano del arreglo de strings es igual al tamaño de arreglo de respuestas
+                    const terminoElArreglo = arregloStrings.length === arregloRespuestas.length
+                    if (terminoElArreglo) {
+                        callback(arregloRespuestas);
+
+                    }
+
+
+                }
+            );
+
+
+        }
+    );
+}
+
+ejercicio(['A', 'B', 'C'],
+
+    (arregloRespuestas) => {
+        console.log(arregloRespuestas);
 
     }
 );
-//asincronico callback resolvio devolver la respuesta  con callback
-//para devolver una respuesta asincronica
-
-
-//problema el mas dificil
-//me acepte un arreglo //['A','B','C']
-//Indice de posicion de arreglo
-//0-A.txt
-//1-B.txt asi
-
-
-
-

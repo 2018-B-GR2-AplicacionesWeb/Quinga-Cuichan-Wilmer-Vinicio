@@ -1,6 +1,6 @@
 // 02-observables.ts
 declare var require: any;
-//declare var Promise: any;
+declare var Promise: any;
 
 const fs = require('fs');
 
@@ -85,7 +85,7 @@ promesita$
 const observableConcatenado$ = numeros$
     .pipe(
       concat(promesita$)
-        map(
+      /*  map(
 
             ()=>{
 
@@ -95,7 +95,7 @@ const observableConcatenado$ = numeros$
 
             }
 
-        )
+        )*/
     )
 
 
