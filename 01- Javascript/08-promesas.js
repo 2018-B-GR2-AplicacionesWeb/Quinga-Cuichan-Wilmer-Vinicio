@@ -1,7 +1,51 @@
+//08-promosas.js
+
+//promesa es una instancia de una clase que se llama Promise();
+//la promesa recibe una funcion anonima
+
+//la promesa recibe 2 parametros resolve and reject
+
+//mientras no se ejecute el resolve no ejecuta el punto .then
+//mientras no se ejecute el reject no ejecuta el punto .catch
+
+
 /*
 
+//ejecutando una promesa dentro de una funcion anonima
+const promesa = () => {
+    return new Promise(
+        (resolve, reject) => {
+             resolve(10); //se ejecuta el then
+            // reject(); //se ejecuta el catch
+        }
+    );
+};
 
-// 08-promesas.js
+//toda promesa tiene un then y catch asincrona
+console.log(promesa);
+promesa()
+//estas funciones reciven una funcion como parametros
+    .then(
+        //se ejecuatan las cosas cuando estan bien
+        //enviar datos desde resolve y los visualiza el then
+        (numero) => {
+            console.log('ok', numero)
+        }
+    )
+    .catch(
+        //se ejecuatan las cosas cuando no estan bien
+        () => {
+            console.log('Mal')
+        }
+    );*/
+//con las promesas ya no se enviar callbacks
+/////////////////////////////////////
+//promesa para leer un archivo
+const fs = require('fs');
+
+
+//con promesas ya no se envia callbacks
+//ahora se tiene el then y catch
 
 
 const promesa = (nombreArchivo) => {
@@ -22,132 +66,66 @@ const promesa = (nombreArchivo) => {
     );
 };
 
-const promesaEscritura = (
-    nombreArchivo,
-    contenidoArchivo) => {
+
+
+
+//escribir archivos
+const promesaEscritura = (nombreArchivo,
+                          contenidoArchivo) => {
     return new Promise(
         (resolve, reject) => {
+
+            //funcion para leer un archivo
             fs.writeFile(
                 nombreArchivo,
                 contenidoArchivo,
+                //callback
                 (error) => {
                     if (error) {
                         reject(error);
-                    } else {
-                        resolve(contenidoArchivo);
                     }
+                    else {
+                        resolve(contenidoArchivo);
+
+                    }
+
+
                 }
             );
+
+
         }
     );
 };
 
-console.log(promesa);
+
+//ejecutar la funcion
 promesa('07-texto.txt')
     .then(
         (contenido) => {
-            console.log('Ok', contenido);
-            return promesaEscritura(
-                '07-texto.txt',
-                contenido + 'Nuevo Contenido');
-            // Promesa
+
+            console.log('ok', contenido);
+            //en el return lo unica se devulve una promesa
+
+            return promesaEscritura('07-texto.txt',
+                contenido + 'Nuevo Contenido' )
+
+
         }
     )
+
+    // se puede concatenar promesas
     .then(
-        (contenidoCompleto) => {
+        (contenidoCompleto)=>{
             console.log(contenidoCompleto);
+
+
         }
+
+
     )
     .catch(
         (error) => {
             console.log('Mal', error);
-        }
-    );
-
-
-
-//deber ejecicio a promesa
-*/
-
-
-//convertir en appenfile
-
-const fs = require('fs');
-
-const promesaEscritura = (nombreArchivo,
-                          contenidoArchivo) =>{
-    return new Promise(
-        (resolve, reject) => {
-            fs.writeFile(
-                nombreArchivo,contenidoArchivo,
-                (error)=>{
-                    if(error){
-                        reject(error)
-                    }
-                    else {
-                        resolve(contenidoArchivo)
-                    }
-                }
-            );
-        }
-    )};
-
-
-
-const appendFile = (nombreArchivo, contenidoArchivo) => {
-    return new Promise(
-        (resolve, reject) => {
-            fs.readFile(
-                nombreArchivo,
-                'utf-8',
-                (error, contenidoLeidoDelArchivo) => {
-                    if (error) {
-                        fs.writeFile(
-                            nombreArchivo,
-                            contenidoLeidoDelArchivo,
-                            (err) => {
-                                if (err) {
-                                    reject(err);
-                                } else {
-                                    // Devolver el contenido
-                                    resolve(contenidoLeidoDelArchivo)
-                                }
-                            }
-                        );
-                    } else {
-                        fs.writeFile(
-                            nombreArchivo,
-                            contenidoLeidoDelArchivo,
-                            (err) => {
-                                if (err) {
-                                    reject(err);
-                                } else {
-                                    // Devolver el contenido
-                                    resolve(contenidoLeidoDelArchivo + 'nuevo contenido')
-                                }
-                            }
-                        )
-                    }
-                }
-            );
-        }
-    )
-
-}
-
-
-
-
-
-appendFile('07-texto.txt', 'nuevoContenido' )
-    .then(
-        (contenido) => {
-            console.log(contenido);
-            return promesaEscritura('09-texto.txt', contenido + 'Adios amigos');
-        }
-    )
-    .catch(
-        (error) => {
-            console.log('Catch',error);
         }
     );
