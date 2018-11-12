@@ -162,12 +162,80 @@ function ejercicio(arregloStrings,
     );
 }
 
-ejercicio(['A', 'B', 'C'],
+/*ejercicio(['A', 'B', 'C'],
 
     (arregloRespuestas) => {
         console.log(arregloRespuestas);
 
     }
-);
+);*/
 
 //callback devolver una respuesta asincrona
+
+
+///promesa ejercicios
+
+
+//se crea la promesa
+const ejercicioPromesa = (arregloStrings) => {
+    return new Promise(
+        (resolver) => {
+            const arregloRespuesta = [];
+
+
+            //forEach recorre al array
+            arregloStrings.forEach(
+                (string, indice) => {
+                    const nombreArchivo = `${indice}-${string}.txt`;
+                    const contenidoArchivo = string;
+
+                    //se escribe en el aechivo
+                    fs.writeFile(
+                        nombreArchivo,
+                        contenidoArchivo,
+                        //callback
+
+                        //se escribe la respuesta
+                        (err) => {
+                            const respuesta = {
+                                nombreArchivo: nombreArchivo,
+                                contenidoArchivo: contenidoArchivo,
+                                error: err
+
+                            };
+
+                            // se agrega en el vecto de respuesta
+                            arregloRespuesta.push(respuesta);
+                            const terminoArreglo = arregloStrings.length === arregloRespuesta.length;
+
+                            if (terminoArreglo) {
+                                resolver(arregloRespuesta);
+
+                            }
+
+
+                        }
+                    );
+
+
+                }
+            )
+        }
+    );
+
+
+};
+
+
+ejercicioPromesa(['A', 'B', 'C'])
+    .then(
+        (respuesta) => {
+            console.log(respuesta)
+
+        }
+    )
+    .catch(
+        (error) => {
+            console.log('Mal', error);
+        }
+    );
