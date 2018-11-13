@@ -227,7 +227,7 @@ const ejercicioPromesa = (arregloStrings) => {
 };
 
 
-ejercicioPromesa(['A', 'B', 'C'])
+/*ejercicioPromesa(['A', 'B', 'C'])
     .then(
         (respuesta) => {
             console.log(respuesta)
@@ -238,4 +238,121 @@ ejercicioPromesa(['A', 'B', 'C'])
         (error) => {
             console.log('Mal', error);
         }
+    );*/
+
+////////////////////////////////////////////////////////////////////////////////
+//funcion abrir un documento con promesas
+
+function appendFilePromesa(nombreArchivo, contenidoArchivo) {
+    //se crea la promesa
+    return new Promise(
+        (resolve, reject) => {
+            //se lee el archivo
+            fs.readFile(
+                nombreArchivo,
+                'utf-8',
+                //callbacks
+                (error, contenidoLeido) => {
+                    if (error) {
+                        const contenido = contenidoArchivo;
+
+                        //escribir en el archivo
+
+                        fs.writeFile(
+                            nombreArchivo,
+                            contenido,
+
+                            (err) => {
+                                //si se produce un error
+                                if (err) {
+                                    //mal
+                                    reject(err);
+
+                                }
+                                else {
+                                    //bien
+                                    resolve(contenido);
+
+                                }
+
+                            }
+                        );
+
+
+                    }
+                    else {
+                        //si existe el archivo se concatena
+
+                        const contenido = contenidoLeido + contenidoArchivo;
+                        //se escribe en el archivo el contenido concatenado
+                        fs.writeFile(
+                            nombreArchivo,
+                            contenido,
+                            //callBacks
+                            (erro) => {
+                                if (erro) {
+                                    reject(erro);
+                                }
+                                else {
+                                    resolve(contenido);
+
+                                }
+
+                            }
+                        );
+
+
+                    }
+
+
+                }
+            );
+
+        }
     );
+
+}
+
+
+appendFilePromesa('07-texto.txt', '\nAdiosssss')
+    .then(
+        //funcion anonima
+        (contenido) => {
+
+            console.log(contenido)
+
+
+        }
+    )
+    .catch(
+
+        (error) => {
+            console.log(error)
+
+
+        }
+    );
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
