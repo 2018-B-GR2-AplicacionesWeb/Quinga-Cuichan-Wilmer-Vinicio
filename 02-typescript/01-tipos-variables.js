@@ -1,30 +1,40 @@
-//01-tipos-variabñes.ts
-//duck typing ->duck
-let nombre = 'Adrian';
-nombre = '1';
+//01-tipos-variables.ts
+//tipos de variables en ts
+//any puede ser lo quesea
+let nombre = 'Vinicio';
 let edad = 21.2;
-edad = '12';
+edad = '1';
 let casado = false;
 casado = true;
-casado = null;
-casado = undefined;
-const arregloNumeros = [1, 2, 3];
-arregloNumeros.push('12');
+const arregloNumeros = [1, 2, 3, 4];
+arregloNumeros.push(1);
+//objecto
+//cuando se iguala a es un jason
+//: a la variable es un interface
+//como se define el tipo de objecto JSON mediante interfacez
+//y luego se le asigna al objecto un JSON
+//tipar objectos con interfacez
 const vinicio = {
-    nombre: 'vinicio',
+    nombre: 'Vinicio',
 };
-vinicio.apellidos = 'Quinga';
-const fecha = new Date();
+const fechas = new Date();
+//tipar funciones devolver 2 cosas
+function saludar(nombre, apellido, 
+//tipos ... arreglo
+...otrosNombres) {
+    return 'hola';
+}
+//casterar cambiar de tipo a algo <>
+let respuestaSaludar = saludar('1', '2', 1, 2, 3, 4, 5);
+respuestaSaludar = 1;
+//tipar funciones anonimas
 const saludarDos = (nombre) => {
     return '';
 };
-function saludar(nombre, apellido, ...otrosNombres) {
-    return 'hola';
-}
-const respuestaSaludar = saludar('vinicio', 'Quinga');
-saludar('vinicio', 'Quinga', 1, 1, 1, 1, 1, 1, 1);
 class UsuarioClase {
 }
+//se tipa
 const usuario = {
-    nombre: 'Vinicio'
+    nombre: 'vinicio'
 };
+//tsc nombre-archivo.ts --target es2017
