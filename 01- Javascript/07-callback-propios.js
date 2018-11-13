@@ -314,7 +314,7 @@ function appendFilePromesa(nombreArchivo, contenidoArchivo) {
 }
 
 
-appendFilePromesa('07-texto.txt', '\nAdiosssss')
+appendFilePromesa('07-texto.txt', '\nAdios')
     .then(
         //funcion anonima
         (contenido) => {
