@@ -1,73 +1,83 @@
-//01-tipos-variabñes.ts
+//01-tipos-variables.ts
 
+//tipos de variables en ts
 
-//duck typing ->duck
-let nombre: any = 'Adrian';
+//any puede ser lo quesea
 
-nombre = '1';
+let nombre: any = 'Vinicio';
 let edad: number | string = 21.2;
-edad = '12';
+edad = '1';
 
 let casado: boolean = false;
-
 casado = true;
-casado = null;
-casado = undefined;
-const arregloNumeros: number[] | number[] | any = [1, 2, 3];
-
-arregloNumeros.push('12');
 
 
-const vinicio: {//interface
+const arregloNumeros: number[] = [1, 2, 3, 4];
+arregloNumeros.push(1);
+
+
+//objecto
+//cuando se iguala a es un jason
+//: a la variable es un interface
+
+//como se define el tipo de objecto JSON mediante interfacez
+//y luego se le asigna al objecto un JSON
+
+//tipar objectos con interfacez
+
+
+const vinicio: {//:interfaz en un objecto JSON
     nombre: string;
-    apellidos?: string;
+    apellido?: string;
     edad?: number;
-    estado?: 'Activo' | 'inactivo';
-    saludar?: (nombre: string) => string;
-} = {//Json
-    nombre: 'vinicio',
+    //cuando una propiedad no se requerida
+    //se hace obsional con ?
+    estado?: 'Activo' | 'Inactivo';
+    //tipar funciones dentro de objectos JSon
+    saludar?: (nombre: String) => string
 
+} = {
+    nombre: 'Vinicio',
 };
-vinicio.apellidos = 'Quinga';
 
-const fecha: Date = new Date();
+const fechas: Date = new Date();
 
+//tipar funciones devolver 2 cosas
 
-const saludarDos = (nombre: string): string => {
-    return ''
-
-};
 
 function saludar(
     nombre: string,
     apellido?: string,
+    //tipos ... arreglo
     ...otrosNombres: number[]
 ): string | number {
     return 'hola';
 }
 
+//casterar cambiar de tipo a algo <>
+let respuestaSaludar = <number>saludar('1', '2', 1, 2, 3, 4, 5);
+respuestaSaludar = 1;
 
-const respuestaSaludar = <number> saludar('vinicio', 'Quinga');
+//tipar funciones anonimas
+const saludarDos = (nombre): string => {
+    return '';
+};
 
-
-saludar('vinicio', 'Quinga', 1, 1, 1, 1, 1, 1, 1);
 
 class UsuarioClase {
-    nombre: string;
+    public nombre: string;
 
 }
 
 interface UsuarioInterface {
-    nombre: string;
+    nombre: String;
 
 }
 
+
+//se tipa
 const usuario = {
-    nombre: 'Vinicio'
+    nombre: 'vinicio'
 };
 
-
-
-
-
-
+//tsc nombre-archivo.ts --target es2017
