@@ -17,7 +17,7 @@ function arregloProductos(arreglo) {
 }
 
 const productosABuscar = (producto) => {
-
+// @ts-ignore
     return new Promise((resolve, reject) => {
         fs.readFile('Productos.txt', 'utf-8', (err, contenido) => {
             if (err) {
@@ -38,6 +38,7 @@ const productosABuscar = (producto) => {
     })
 };
 const promesaBuscar = (arreglo) => {
+    // @ts-ignore
     return new Promise((resolve) => {
         arreglo.forEach((elemnet) => {
             productosABuscar(elemnet.productos).then((respuesta) => {
@@ -57,6 +58,8 @@ function buscarProducto(arreglo) {
 }
 
 const productos = () => {
+    // @ts-ignore
+
     return new Promise((resolve, reject) => {
         fs.readFile('Productos.txt', 'utf-8', (err, contenido) => {
             if (err) {
@@ -72,6 +75,8 @@ const productos = () => {
     })
 };
 const ingresarUsuarios = (nombreArchivo, contenidoArchivo) => {
+    // @ts-ignore
+
     return new Promise(
         (resolve, reject) => {
             fs.readFile(nombreArchivo, 'utf-8',
@@ -104,6 +109,8 @@ const ingresarUsuarios = (nombreArchivo, contenidoArchivo) => {
     )
 };
 const usuarios = (usua) => {
+    // @ts-ignore
+
     return new Promise(
         (resolve, reject) => {
             fs.readFile('Login.txt', 'utf-8', (err, contenido) => {
@@ -271,6 +278,9 @@ function subMenuComprador() {
         }
         else if (ans.menuComprador === 'lista de discos') {
             buscarProducto(produtosSeleccionados)
+
+         //   subMenuComprador()
+
         }
     })
 }
