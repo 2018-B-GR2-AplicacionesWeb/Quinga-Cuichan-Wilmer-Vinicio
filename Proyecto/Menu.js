@@ -51,7 +51,7 @@ function buscarProducto(arreglo) {
         console.log(reg);
     });
 }
-const productos = () => {
+const music = () => {
     // @ts-ignore
     return new Promise((resolve, reject) => {
         fs.readFile('Productos.txt', 'utf-8', (err, contenido) => {
@@ -246,9 +246,9 @@ function subMenuComprador() {
             regresar();
         }
         else if (ans.menuComprador === 'Escojer disco a comprar') {
-            productos().then((resultado) => {
+            music().then((resultado) => {
                 const producto = {
-                    name: 'productos',
+                    name: 'music',
                     type: 'list',
                     message: 'Escoja un disco',
                     choices: arregloProductos(resultado),
