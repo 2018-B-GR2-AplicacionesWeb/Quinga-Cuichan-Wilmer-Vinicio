@@ -1,3 +1,6 @@
+
+declare var require: any;
+
 const inquirer = require('inquirer');
 const fs = require('fs');
 const rxjs = require('rxjs');
@@ -39,6 +42,7 @@ const preguntaUsuario = [
 
 
 function inicialiarBDD() {
+    // @ts-ignore
 
     return new Promise(
         (resolve, reject) => {
@@ -146,6 +150,8 @@ async function main() {
 }
 
 function guardarBDD(bdd: BDD) {
+    // @ts-ignore
+
     return new Promise(
         (resolve, reject) => {
             fs.writeFile(
