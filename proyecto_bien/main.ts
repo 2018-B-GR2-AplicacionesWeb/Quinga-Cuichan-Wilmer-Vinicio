@@ -1,11 +1,11 @@
-
-declare var require: any;
-
 const inquirer = require('inquirer');
 const fs = require('fs');
 const rxjs = require('rxjs');
+const timer = require('rxjs').timer;
 const mergeMap = require('rxjs/operators').mergeMap;
 const map = require('rxjs/operators').map;
+const retryWhen = require('rxjs/operators').retryWhen;
+const delayWhen = require('rxjs/operators').delayWhen;
 
 const preguntaMenu = {
     type: 'list',
@@ -40,9 +40,16 @@ const preguntaUsuario = [
     },
 ];
 
+const preguntaEdicionUsuario = [
+    {
+        type: 'input',
+        name: 'nombre',
+        message: 'Cual es el nuevo nombre'
+    },
+];
+
 
 function inicialiarBDD() {
-    // @ts-ignore
 
     return new Promise(
         (resolve, reject) => {
@@ -150,8 +157,6 @@ async function main() {
 }
 
 function guardarBDD(bdd: BDD) {
-    // @ts-ignore
-
     return new Promise(
         (resolve, reject) => {
             fs.writeFile(
@@ -248,7 +253,7 @@ function ejecutarAcccion() {
                     return respuestaBDD;
                 case 'Actualizar':
                     const indice = respuestaBDD.indiceUsuario;
-                    console.log('respuestaBDD.bdd.usuarios[indice]', respuestaBDD.bdd.usuarios[indice]);
+                    respuestaBDD.bdd.usuarios[indice].nombre = respuestaBDD.usuario.nombre;
                     return respuestaBDD;
 
             }
@@ -293,7 +298,7 @@ function preguntarIdUsuario(respuestaBDD: RespuestaBDD) {
     return rxjs
         .from(inquirer.prompt(preguntaBuscarUsuario))
         .pipe(
-            map( // RESP ANT OBS
+            mergeMap( // RESP ANT OBS
                 (respuesta: BuscarUsuarioPorId) => {
                     const indiceUsuario = respuestaBDD.bdd
                         .usuarios
@@ -303,10 +308,23 @@ function preguntarIdUsuario(respuestaBDD: RespuestaBDD) {
                             }
                         );
                     if (indiceUsuario === -1) {
-                        preguntarIdUsuario(respuestaBDD);
+                        console.log('preguntando de nuevo');
+                        return preguntarIdUsuario(respuestaBDD);
                     } else {
                         respuestaBDD.indiceUsuario = indiceUsuario;
-                        return respuestaBDD;
+                        return rxjs
+                            .from(inquirer.prompt(preguntaEdicionUsuario))
+                            .pipe(
+                                map(
+                                    (nombre:{nombre:string})=>{
+                                        respuestaBDD.usuario ={
+                                            id:null,
+                                            nombre:nombre.nombre
+                                        };
+                                        return respuestaBDD;
+                                    }
+                                )
+                            );
                     }
                 }
             )
