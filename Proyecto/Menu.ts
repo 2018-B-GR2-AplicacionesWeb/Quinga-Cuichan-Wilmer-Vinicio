@@ -37,6 +37,8 @@ const productosABuscar = (producto) => {
         });
     })
 };
+
+
 const promesaBuscar = (arreglo) => {
     // @ts-ignore
     return new Promise((resolve) => {
@@ -49,6 +51,9 @@ const promesaBuscar = (arreglo) => {
     })
 };
 
+
+
+
 function buscarProducto(arreglo) {
     console.log('\n***Discos a comprar: ***');
     console.log('   Nombre Disco\t\tPrecio\t\tTotal');
@@ -57,7 +62,10 @@ function buscarProducto(arreglo) {
     })
 }
 
-const productos = () => {
+
+
+
+const music = () => {
     // @ts-ignore
 
     return new Promise((resolve, reject) => {
@@ -74,6 +82,8 @@ const productos = () => {
         });
     })
 };
+
+
 const ingresarUsuarios = (nombreArchivo, contenidoArchivo) => {
     // @ts-ignore
 
@@ -265,9 +275,9 @@ function subMenuComprador() {
             regresar();
         }
         else if (ans.menuComprador === 'Escojer disco a comprar') {
-            productos().then((resultado) => {
+            music().then((resultado) => {
                 const producto = {
-                    name: 'productos',
+                    name: 'music',
                     type: 'list',
                     message: 'Escoja un disco',
                     choices: arregloProductos(resultado),
