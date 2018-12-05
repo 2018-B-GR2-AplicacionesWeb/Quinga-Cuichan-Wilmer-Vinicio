@@ -1,238 +1,347 @@
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 const inquirer = require('inquirer');
 const fs = require('fs');
 const rxjs = require('rxjs');
-const timer = require('rxjs').timer;
 const mergeMap = require('rxjs/operators').mergeMap;
 const map = require('rxjs/operators').map;
-const retryWhen = require('rxjs/operators').retryWhen;
-const delayWhen = require('rxjs/operators').delayWhen;
+
 const preguntaMenu = {
     type: 'list',
     name: 'opcionMenu',
-    message: 'Que quieres hacer',
+    message: 'Escoja una opción: ',
     choices: [
-        'Crear',
-        'Borrar',
-        'Buscar',
-        'Actualizar',
+        '1.- Crear Producto',
+        '2.- Borrar Producto',
+        '3.- Buscar Producto',
+        '4.- Actualizar Producto',
     ]
 };
-const preguntaBuscarUsuario = [
+const ingresarProductos = [{
+    name: 'nombre',
+    type: 'input',
+    message: 'Ingrese el nombre del producto: '
+},{
+    name: 'categoria',
+    type: 'input',
+    message: 'Ingrese la categoria del producto: '
+},{
+    name: 'precio',
+    type: 'input',
+    message: 'Ingrese el precio del producto: '
+}];
+const preguntaBuscarProducto = [
     {
         type: 'input',
-        name: 'idUsuario',
-        message: 'Ingrese ID Usuario',
+        name: 'nombre',
+        message: 'Ingrese el nombre del producto',
     }
 ];
-const preguntaUsuario = [
-    {
-        type: 'input',
-        name: 'id',
-        message: 'Cual es tu id'
-    },
-    {
-        type: 'input',
-        name: 'nombre',
-        message: 'Cual es tu nombre'
-    },
-];
-const preguntaEdicionUsuario = [
-    {
-        type: 'input',
-        name: 'nombre',
-        message: 'Cual es el nuevo nombre'
-    },
-];
+const preguntaEdicionProducto = [{
+    name: 'nombre',
+    type: 'input',
+    message: 'Ingrese el nuevo nombre del producto: '
+}, {
+    name: 'categoria',
+    type: 'input',
+    message: 'Ingrese la nueva categoria del producto: '
+}, {
+    name: 'precio',
+    type: 'input',
+    message: 'Ingrese el nuevo precio del producto: '
+}];
 function inicialiarBDD() {
-    return new Promise((resolve, reject) => {
-        fs.readFile('bdd.json', 'utf-8', (error, contenidoArchivo) => {
-            if (error) {
-                fs.writeFile('bdd.json', '{"usuarios":[],"mascotas":[]}', (error) => {
+
+    return new Promise(
+        (resolve, reject) => {
+            fs.readFile(
+                'bdd.json',
+                'utf-8',
+                (error, contenidoArchivo) => { // CALLBACK
+                    if (error) {
+
+                        fs.writeFile(
+                            'bdd.json',
+                            '{"productos":[]}',
+                            (error) => {
+                                if (error) {
+                                    reject({
+                                        mensaje: 'Error creando',
+                                        error: 500
+                                    })
+                                } else {
+                                    resolve({
+                                        mensaje: 'BDD leida',
+                                        bdd: JSON.parse('{"productos":[]}')
+                                    })
+                                }
+
+                            }
+                        )
+
+                    } else {
+                        resolve({
+                            mensaje: 'BDD leida',
+                            bdd: JSON.parse(contenidoArchivo)
+                        })
+                    }
+                }
+            )
+        }
+    );
+
+}
+function main() {
+    const respuestaBDD$ = rxjs.from(inicialiarBDD());
+    respuestaBDD$
+        .pipe(
+            preguntarOpcionesMenu(),
+            opcionesRespuesta(),
+            ejecutarAcccion(),
+            guardarBaseDeDatos()
+        )
+        .subscribe(
+            (data:RespuestaBDD) => {
+                //
+                console.log("\n*************Base Final*****************\n");
+                console.log(data.bdd.productos)
+            },
+            (error) => {
+                //
+                console.log(error);
+            },
+            () => {
+                main();
+                console.log('Complete');
+            }
+        )
+
+
+
+}
+function guardarBDD(bdd: BDD) {
+    return new Promise(
+        (resolve, reject) => {
+            fs.writeFile(
+                'bdd.json',
+                JSON.stringify(bdd),
+                (error) => {
                     if (error) {
                         reject({
                             mensaje: 'Error creando',
                             error: 500
-                        });
-                    }
-                    else {
+                        })
+                    } else {
                         resolve({
-                            mensaje: 'BDD leida',
-                            bdd: JSON.parse('{"usuarios":[],"mascotas":[]}')
-                        });
+                            mensaje: 'BDD guardada',
+                            bdd: bdd
+                        })
                     }
-                });
-            }
-            else {
-                resolve({
-                    mensaje: 'BDD leida',
-                    bdd: JSON.parse(contenidoArchivo)
-                });
-            }
-        });
-    });
-}
-function main() {
-    return __awaiter(this, void 0, void 0, function* () {
-        // 1) Inicializar bdd -- DONE
-        // 2) Preguntas Menu -- DONE
-        // 3) Opciones de Respuesta --  DONE
-        // 4) ACCCION!!!!  -- DONE
-        // 5) Guardar BDD --
-        // of(Cualquier cosa JS)
-        // from(Promesas)
-        const respuestaBDD$ = rxjs.from(inicialiarBDD());
-        respuestaBDD$
-            .pipe(preguntarOpcionesMenu(), opcionesRespuesta(), ejecutarAcccion(), guardarBaseDeDatos())
-            .subscribe((data) => {
-                //
-                console.log(data);
-            }, (error) => {
-                //
-                console.log(error);
-            }, () => {
-                main();
-                console.log('Complete');
-            });
-        /*
-        try {
-            const respuestaInicializarBDD:RespuestaBDD = <RespuestaBDD> await inicialiarBDD();
-            const bdd = respuestaInicializarBDD.bdd;
-            const respuestaMenu = await inquirer.prompt(preguntaMenu);
 
-            switch (respuestaMenu.opcionMenu) {
-                case 'Crear':
-
-                    // Preguntar datos del nuevo Usuario
-                    const usuario = await inquirer.prompt(preguntaUsuario);
-
-                    // CREAR USUARIO
-                    bdd.usuarios.push(usuario); // JS
-
-                    const respuestaGuardado = await guardarBDD(bdd);
-                    main();
-
-                    break;
-
-            }
-
-        } catch (e) {
-            console.error(e)
+                }
+            )
         }
-
-        */
-    });
+    )
 }
-function guardarBDD(bdd) {
-    return new Promise((resolve, reject) => {
-        fs.writeFile('bdd.json', JSON.stringify(bdd), (error) => {
-            if (error) {
-                reject({
-                    mensaje: 'Error creando',
-                    error: 500
-                });
-            }
-            else {
-                resolve({
-                    mensaje: 'BDD guardada',
-                    bdd: bdd
-                });
-            }
-        });
-    });
-}
-main();
 function preguntarOpcionesMenu() {
-    return mergeMap(// Respuesta Anterior Observable
-        (respuestaBDD) => {
-            return rxjs
-                .from(inquirer.prompt(preguntaMenu))
-                .pipe(map(// respuesta ant obs
-                    (respuesta) => {
+    return mergeMap(
+        (respuestaBDD: RespuestaBDD) => {
+            return rxjs.from(inquirer.prompt(preguntaMenu)).pipe(
+                map(
+                    (respuesta: OpcionMenu) => {
                         respuestaBDD.opcionMenu = respuesta;
-                        return respuestaBDD;
-                        // Cualquier cosa JS
-                    }));
-            // OBSERVABLE!!!!!!!!!!
-        });
+                        return respuestaBDD
+                    }
+                )
+            );
+
+        }
+    )
 }
 function opcionesRespuesta() {
-    return mergeMap((respuestaBDD) => {
-        const opcion = respuestaBDD.opcionMenu.opcionMenu;
-        switch (opcion) {
-            case 'Crear':
-                return rxjs
-                    .from(inquirer.prompt(preguntaUsuario))
-                    .pipe(map((usuario) => {
-                        respuestaBDD.usuario = usuario;
-                        return respuestaBDD;
-                    }));
-            case 'Buscar':
-                break;
-            case 'Actualizar':
-                return preguntarIdUsuario(respuestaBDD);
-            case 'Borrar':
-                break;
+    return mergeMap(
+        (respuestaBDD: RespuestaBDD) => {
+            const opcion = respuestaBDD.opcionMenu.opcionMenu;
+            switch (opcion) {
+                case '1.- Crear Producto':
+                    return rxjs
+                        .from(inquirer.prompt(ingresarProductos))
+                        .pipe(
+                            map(
+                                (producto: Productos) => { // resp ant OBS
+                                    respuestaBDD.producto = producto;
+                                    return respuestaBDD;
+                                }
+                            )
+                        );
+                case '3.- Buscar Producto':
+                    return buscarProducto(respuestaBDD);
+                    break;
+                case '4.- Actualizar Producto':
+                    return preguntarNombre(respuestaBDD);
+                case '2.- Borrar Producto':
+                    return borrarProducto(respuestaBDD);
+                    break;
+            }
         }
-    });
+    )
 }
 function guardarBaseDeDatos() {
     return mergeMap(// Respuesta del anterior OBS
-        (respuestaBDD) => {
+        (respuestaBDD: RespuestaBDD) => {
             // OBS
-            return rxjs.from(guardarBDD(respuestaBDD.bdd));
-        });
+            return rxjs.from(guardarBDD(respuestaBDD.bdd))
+        }
+    )
 }
 function ejecutarAcccion() {
-    return map(// Respuesta del anterior OBS
-        (respuestaBDD) => {
+    return map( // Respuesta del anterior OBS
+        (respuestaBDD: RespuestaBDD) => {
             const opcion = respuestaBDD.opcionMenu.opcionMenu;
             switch (opcion) {
-                case 'Crear':
-                    const usuario = respuestaBDD.usuario;
-                    respuestaBDD.bdd.usuarios.push(usuario);
+                case '1.- Crear Producto':
+                    const producto = respuestaBDD.producto;
+                    respuestaBDD.bdd.productos.push(producto);
                     return respuestaBDD;
-                case 'Actualizar':
+                case '4.- Actualizar Producto':
                     const indice = respuestaBDD.indiceUsuario;
-                    respuestaBDD.bdd.usuarios[indice].nombre = respuestaBDD.usuario.nombre;
+                    respuestaBDD.bdd.productos[indice].nombre = respuestaBDD.producto.nombre;
+                    respuestaBDD.bdd.productos[indice].categoria = respuestaBDD.producto.categoria;
+                    respuestaBDD.bdd.productos[indice].precio= respuestaBDD.producto.precio;
+                    return respuestaBDD;
+                case '2.- Borrar Producto':
+                    return respuestaBDD;
+                case '3.- Buscar Producto':
                     return respuestaBDD;
             }
-        });
+        }
+    )
 }
-function preguntarIdUsuario(respuestaBDD) {
-    console.log('Pregunta de nuevo');
+function preguntarNombre(respuestaBDD: RespuestaBDD) {
     return rxjs
-        .from(inquirer.prompt(preguntaBuscarUsuario))
-        .pipe(mergeMap(// RESP ANT OBS
-            (respuesta) => {
-                const indiceUsuario = respuestaBDD.bdd
-                    .usuarios
-                    .findIndex(// -1
-                        (usuario) => {
-                            return usuario.id === respuesta.idUsuario;
-                        });
-                if (indiceUsuario === -1) {
-                    console.log('preguntando de nuevo');
-                    return preguntarIdUsuario(respuestaBDD);
+        .from(inquirer.prompt(preguntaBuscarProducto))
+        .pipe(
+            mergeMap( // RESP ANT OBS
+                (respuesta: BuscarProductoPorNombre) => {
+                    const indiciProducto=respuestaBDD.bdd.productos
+                        .findIndex( // -1
+                            (producto) => {
+                                return producto.nombre === respuesta.nombre
+                            }
+                        );
+                    if (indiciProducto === -1) {
+                        console.log('*************************');
+                        return preguntarNombre(respuestaBDD);
+                    } else {
+                        console.log(indiciProducto);
+                        respuestaBDD.indiceUsuario = indiciProducto;
+                        return rxjs.from(inquirer.prompt(preguntaEdicionProducto)).pipe(
+                            map(
+                                (respuesta: Productos)=>{
+                                    respuestaBDD.producto ={
+                                        nombre:respuesta.nombre,
+                                        categoria:respuesta.categoria,
+                                        precio: respuesta.precio
+                                    };
+                                    return respuestaBDD;
+                                }
+                            )
+                        );
+                    }
                 }
-                else {
-                    respuestaBDD.indiceUsuario = indiceUsuario;
-                    return rxjs
-                        .from(inquirer.prompt(preguntaEdicionUsuario))
-                        .pipe(map((nombre) => {
-                            respuestaBDD.usuario = {
-                                id: null,
-                                nombre: nombre.nombre
-                            };
-                            return respuestaBDD;
-                        }));
+            )
+        );
+}
+function borrarProducto(respuestaBDD: RespuestaBDD) {
+    return rxjs
+        .from(inquirer.prompt(preguntaBuscarProducto))
+        .pipe(
+            mergeMap( // RESP ANT OBS
+                (respuesta: BuscarProductoPorNombre) => {
+                    const indiceProducto = respuestaBDD.bdd
+                        .productos
+                        .findIndex( // -1
+                            (producto: any) => {
+                                return producto.nombre === respuesta.nombre
+                            }
+                        );
+                    if (indiceProducto === -1) {
+                        console.log('Borrar****************');
+                        return preguntarNombre(respuestaBDD);
+                    } else {
+                        console.log(indiceProducto);
+                        return rxjs.from(promesaEliminar(respuestaBDD.bdd.productos,indiceProducto)).pipe(
+                            map(() =>{
+                                    return respuestaBDD
+                                }
+                            )
+                        )
+                    }
                 }
-            }));
+            )
+        );
+}
+function buscarProducto(respuestaBDD: RespuestaBDD) {
+    return rxjs
+        .from(inquirer.prompt(preguntaBuscarProducto))
+        .pipe(
+            mergeMap(
+                (respuesta: BuscarProductoPorNombre) => {
+                    const indiceProducto = respuestaBDD.bdd.productos
+                        .findIndex( // -1
+                            (producto) => {
+                                return producto.nombre === respuesta.nombre
+                            }
+                        );
+                    if (indiceProducto === -1) {
+                        console.log('Buscar***********');
+                        return preguntarNombre(respuestaBDD);
+                    } else {
+                        return rxjs.from(promesaBuscar(respuestaBDD.bdd.productos[indiceProducto])
+                        ).pipe(
+                            map(() =>{
+                                    return respuestaBDD
+                                }
+                            )
+                        )
+                    }
+                }
+            )
+        );
+}
+const promesaBuscar = (respuestaBDD) =>{
+    return new Promise(
+        (resolve) => {
+            const resultado = {
+                respuesta: respuestaBDD
+            };
+            console.log('\nRespuesta:\n', respuestaBDD);
+            resolve(resultado)
+        }
+    )};
+const promesaEliminar = (respuestaBDD,indiceProducto) =>{
+    return new Promise(
+        (resolve) => {
+            resolve(respuestaBDD.splice(indiceProducto, 1))
+        }
+    )};
+main()
+interface RespuestaBDD {
+    mensaje: string;
+    bdd: BDD;
+    opcionMenu?: OpcionMenu;
+    indiceUsuario?: number;
+    producto?: Productos;
+}
+interface BDD {
+    productos: Productos[] | any ;
+}
+interface Productos {
+    nombre: string;
+    categoria: string;
+    precio: number;
+}
+interface OpcionMenu {
+    opcionMenu: '1.- Crear Producto' | '2.- Borrar Producto' | '3.- Buscar Producto' | '4.- Actualizar Producto';
+}
+interface BuscarProductoPorNombre {
+    nombre: string;
 }
