@@ -1,4 +1,4 @@
-import {Get, Controller, Request, Response,Headers, HttpCode, HttpException, Query, Param} from '@nestjs/common';
+import {Get, Controller, Request, Response, Headers, HttpCode, HttpException, Query, Param} from '@nestjs/common';
 import {AppService} from './app.service';
 import {Observable, of} from "rxjs";
 
@@ -33,14 +33,6 @@ export class AppController {
     }
 
 
-
-
-
-
-
-
-
-
     @Get('despedirse')
     @HttpCode(201)
     despedirse(): Promise<string> {
@@ -66,8 +58,29 @@ export class AppController {
         return of('Hola mundo');
     }
 
+    @Get('inicio')
+    inicio(
+        @Res() response
+    ) {
+        response.render('inicio', {
+            nombre: 'Vinicio',
+            arreglo: [
+                {
+                    nombre: 'Vinicio',
+                    id: 1
+                },
+                {
+                    nombre: 'Wilmer',
+                    id: 2
+                }
 
 
+            ]
+
+        });
+
+
+    }
 
 
 }

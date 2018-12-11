@@ -1,0 +1,81 @@
+
+<style>
+
+    table ,th, td{
+
+        border: 1px solid black;
+    }
+
+
+
+</style>
+
+
+
+
+
+
+
+
+
+<!-- cuando no se quiere mostrar algo en pantalla sin el = -->
+<% var apellido = 'Quinga' %>
+<!-- h1 -> header 1 -->
+
+<h1> <%= nombre %> <%= apellido %>   </h1> <!-- aplicaciones tradicionales -->
+
+<!-- p -> parrafo -->
+
+<p>parrafo</p>
+<h2>Arreglos</h2>
+
+<!-- ul -> unordered list -->
+<!-- ol -> ordered list -->
+
+<ol>
+
+    <li>1</li>
+    <li>2</li>
+    <li>3</li>
+
+
+</ol>
+
+<!--
+
+<ul>
+    <% //arreglo.forEach((numero)=>{ %>
+
+        <%= //numero %>
+
+
+        <li><%= //numero %></li>
+
+    <% } ) %>
+
+</ul>  -->
+
+<table>
+
+    <tr>
+        <th>Identificador</th>
+        <th>Nombre</th>
+        <th>Acciones</th>
+
+
+    </tr>
+
+    <% arreglo.forEach(()=>{ %>
+
+    <tr>
+        <td><%=usuario.id%></td>
+        <td><%=usuario.nombre%></td>
+        <td><button>Eliminar</button></td>
+
+
+    </tr>
+
+   <%  })%>
+
+
+</table>
