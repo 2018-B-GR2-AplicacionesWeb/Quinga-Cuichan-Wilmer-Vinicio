@@ -1,7 +1,14 @@
 import {Injectable} from "@nestjs/common";
 
+
 @Injectable()
+//se crea la clase
+//el controlador maneja el request y response
+
 export class UsuarioService {
+
+    //array de usuarios
+
     usuarios: Usuario[] = [
         {
             nombre: 'Adrian',
@@ -21,6 +28,8 @@ export class UsuarioService {
     ];
     registroActual = 4;
 
+
+    //para crear recive el usuario
     crear(nuevoUsuario: Usuario): Usuario {
         nuevoUsuario.id = this.registroActual;
         this.registroActual++;
@@ -64,6 +73,9 @@ export class UsuarioService {
 
 
 }
+
+
+//se crea una interfaz sive para tipar
 
 export interface Usuario {
     id: number;
