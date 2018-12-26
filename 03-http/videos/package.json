@@ -5,7 +5,7 @@
   "author": "Adrian Eguez",
   "license": "MIT",
   "scripts": {
-    "listar:directorio": "tsc manin.ts --target es2015 && node main.js",
+    "listar:directorio": "tsc manin.ts --target es2015 && node main.js",//comando
     "build": "tsc",
     "format": "prettier --write \"src/**/*.ts\"",
     "start": "ts-node -r tsconfig-paths/register src/main.ts",

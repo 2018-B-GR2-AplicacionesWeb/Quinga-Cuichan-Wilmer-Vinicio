@@ -84,11 +84,41 @@ export class AppController {
 
     @Get('inicio')
     inicio(
-        @Res() response
+        @Res() response,
+        @Query('accion') accion: string,
+        @Query('nombre') nombre: string,
+        @Query('busqueda') busqueda: string,
     ) {
+
+
+        let mensaje; // undefined
+
+        if (accion && nombre) {
+            switch (accion) {
+                case 'actualizar':
+                    mensaje = `Registro ${nombre} actualizado`;
+                    break;
+                case 'borrar':
+                    mensaje = `Registro ${nombre} eliminado`;
+                    break;
+                case 'crear':
+                    mensaje = `Registro ${nombre} creado`;
+                    break;
+            }
+        }
+
+        let usuarios: Usuario[];
+        if (busqueda) {
+            usuarios = this._usuarioService
+                .buscarPorNombreOBiografia(busqueda);
+        } else {
+            usuarios = this._usuarioService.usuarios
+        }
+
         response.render('inicio', {
             nombre: 'Adrian',
-            arreglo: this._usuarioService.usuarios
+            arreglo: usuarios,
+            mensaje: mensaje
         });
     }
 
@@ -97,9 +127,12 @@ export class AppController {
         @Param('idUsuario') idUsuario: string,
         @Res() response
     ) {
-        this._usuarioService.borrar(Number(idUsuario));
+        const usuario = this._usuarioService
+            .borrar(Number(idUsuario));
 
-        response.redirect('/Usuario/inicio');
+        const parametrosConsulta = `?accion=borrar&nombre=${usuario.nombre}`;
+
+        response.redirect('/Usuario/inicio' + parametrosConsulta);
     }
 
     @Get('crear-usuario')
@@ -127,6 +160,25 @@ export class AppController {
         )
     }
 
+
+    @Post('actualizar-usuario/:idUsuario')
+    actualizarUsuarioFormulario(
+        @Param('idUsuario') idUsuario: string,
+        @Res() response,
+        @Body() usuario: Usuario
+    ) {
+        usuario.id = +idUsuario;
+
+        this._usuarioService
+            .actualizar(+idUsuario, usuario);
+
+        const parametrosConsulta = `?accion=actualizar&nombre=${usuario.nombre}`;
+
+        response.redirect('/Usuario/inicio' + parametrosConsulta);
+
+    }
+
+
     @Post('crear-usuario')
     crearUsuarioFormulario(
         @Body() usuario: Usuario,
@@ -135,7 +187,9 @@ export class AppController {
 
         this._usuarioService.crear(usuario);
 
-        response.redirect('/Usuario/inicio')
+        const parametrosConsulta = `?accion=crear&nombre=${usuario.nombre}`;
+
+        response.redirect('/Usuario/inicio' + parametrosConsulta)
     }
 
 }

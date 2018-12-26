@@ -4,6 +4,14 @@
     }
 </style>
 
+<% const existeMensaje = typeof mensaje !== "undefined" ? true : false;%>
+
+<%if(existeMensaje){%>
+
+    <p>MENSAJE: <%= mensaje%></p>
+
+<%}%>
+
 
 <% var apellido = 'Eguez' %>
 <!-- h1 -> Header 1 -->
@@ -11,6 +19,32 @@
 <!-- p -> parrafo -->
 
 <!-- a -> anchor-->
+
+
+<script>
+    function holaMundo(){
+        console.log('Hola mundo')
+    }
+</script>
+
+
+<button onclick="holaMundo()"> click </button>
+
+
+
+<form action="/Usuario/inicio"
+      method="get">
+
+    <div>
+        <label for="busqueda">Busqueda</label>
+        <input id="busqueda" type="text" name="busqueda">
+    </div>
+
+    <button type="submit">Buscar</button>
+
+</form>
+
+
 <a href="/Usuario/crear-usuario">
     <button>Crear Usuario</button>
 </a>
