@@ -10,11 +10,13 @@ import {Options} from 'http-server'//js
 import {AppModule} from './app.module';
 import {of} from "rxjs";
 import {fromArray} from "rxjs/internal/observable/fromArray";
+
 //import {a} from "./mi-codigo"; //importo la variable a del archivo mi-codigo
 
 async function bootstrap() {
-   // console.log(a);
+    // console.log(a);
     const app = await NestFactory.create(AppModule);
+    app.set('view engine', 'ejs');
     await app.listen(3000);//puerto
 }
 

@@ -1,0 +1,98 @@
+<!--  Estilos-->
+
+<style>
+
+    table, th, td {
+        border: 1px solid black;
+
+    }
+
+</style>
+
+
+<!--  = muestra la variable en pantalla-->
+
+<% var apellido = 'Quinga' %> <!--  =variable-->
+
+
+<h1><%= nombre %> <%= apellido %></h1><!-- despliega la variable nombre del archivo app.controller.ts-->
+
+<!--
+<p>Parrafo</p>
+<h2>Arreglo</h2>
+-->
+
+<!--  listas-->
+
+<!--  ul -> unordered list-->
+<!--  ol -> ordered list-->
+<!--
+<ol>
+    <li>1</li>
+    <li>2</li>
+    <li>3</li>
+
+
+</ol>-->
+
+<!--  crear una lista con un arreglo-->
+<!--
+<ul>
+    <!--  imprimir un arreglo utilizando callback-->
+<% //arreglo.forEach((numero)=>{                      %>
+<!-- <li> <%= // numero                      %></li>
+
+    <%                      //})                      %>
+
+</ul> -->
+
+
+<!--//////////////aplicaciones tradicionales////////////////////////////////////////-->
+
+
+<table>
+
+    <!-- tr -> table header-->
+
+    <tr>
+        <th>Identficador</th>
+        <th>Nombre</th>
+        <th>Acciones</th>
+
+
+    </tr>
+
+    <!-- tr -> table row-->
+    <!-- Desplegar datos desde un array en una tabla utilizando forEach-->
+
+    <% arreglo.forEach((usuario)=>{ %>
+
+
+
+        <tr>
+            <!-- tr -> table detail-->
+
+            <td>
+                <%= usuario.id %>
+            </td>
+            <td><%= usuario.nombre %></td>
+            <td>
+                <!-- form forma tradicional-->
+
+                <form action="/Usuario/borrar/<%= usuario.id %>"
+                      method="post">
+                    <button type="button">yo no</button>   <!--  type button no elimina, los demas s -->
+                    <button>yo si</button>
+                    <button type="submit">Eliminar</button>
+
+                </form>
+            </td>
+
+
+        </tr>
+
+    <% }) %>
+
+</table>
+
+
