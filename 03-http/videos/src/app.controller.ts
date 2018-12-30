@@ -9,12 +9,14 @@ import {
     Response,
     Headers,
     Res,
-    Post
+    Post, Body
 } from '@nestjs/common';
 import {AppService} from './app.service';
 import {Observable, of} from "rxjs";
+import {Usuario, UsuarioService} from "./usuario.service";
+//import {Usuario} from "./mi-codigo";
 
-
+// controlador gestionaba el protocolo http, recive el request, y enviar el response
 //decorador -> funcion
 // se ejecuta antes de algo
 
@@ -30,29 +32,19 @@ import {Observable, of} from "rxjs";
 
 export class AppController {
 
-    usuarios = [
-        {
-            nombre: 'Vinicio',
-            id: 1
-        },
-        {
-            nombre: 'Wilmer',
-            id: 2
+    //importar servicios al controlador necesita estar registrados en el nesr
 
-        },
-        {
-            nombre: 'Joselyn',
-            id: 3
-
-        }
-    ];
-
-
-    nombre: String = 'Vinicio';
+    // constructor no es un constructor normal
 
     constructor(
-        private readonly appService: AppService) {
+        private readonly _usuarioService: UsuarioService,)
+    // private readonly _appService:AppService
+    {
     }
+
+
+    // nombre: String = 'Vinicio';
+
 
     // @Get('saludar')
 
@@ -112,6 +104,7 @@ export class AppController {
     }
 
 /////////////////////////////////////////////////////////////////////////////
+    //logica en el controlador,
     //ejemplo
     //cliente renderiza
     @Get('inicio')
@@ -121,32 +114,46 @@ export class AppController {
     ) {
         response.render('inicio', {//inicio.ejs
             nombre: 'Vinicio',
-            arreglo: this.usuarios //variable creada en el principio
+            arreglo: this._usuarioService.usuarios //llama a la nueva clase creada
         });
 
     }
+
 
 //metodo borrar
     //query params, body params, parametros de ruta, parametros desde el cliente
     @Post('borrar/:idUsuario')//parametros de ruta
     borrar(
-        @Param('idUsuario') idUsuario,
-        @Res() response //todas las variables de la respuesta
+        @Param('idUsuario') idUsuario: String,
+        @Res() response //todas las variables de la respuesta, envia el resquet
 
     ) {
-//borrar un dato del array, dependiendo del id
-        const indiceUsuario = this
-            .usuarios
-            .findIndex(
-                (usuario) => usuario.id === Number(idUsuario)
-            );
-        this.usuarios.splice(indiceUsuario, 1);
+
+        this._usuarioService.borrar(Number(idUsuario));  //metodo en la clase usuario.service.ts
 
 
-        response.render('inicio', {//inicio.ejs
-            nombre: 'Vinicio',
-            arreglo: this.usuarios
-        });
+        response.redirect('/Usuario/inicio')//cuando se borrar un usuario se dirige a la misma pagina
+
+    }
+
+
+    @Get('crear-usuario')
+    crearUsuario(
+        @Res() response
+    ) {
+        response.render(
+            'crear-usuario'
+        )
+    }
+
+    @Post('crear-usuario')
+    crearUsuarioFormulario(
+        @Body() usuario: Usuario,
+        @Res() response
+    ) {
+
+        this._usuarioService.crear(usuario);
+      //  response.redirect('/Usuario/inicio');
 
     }
 

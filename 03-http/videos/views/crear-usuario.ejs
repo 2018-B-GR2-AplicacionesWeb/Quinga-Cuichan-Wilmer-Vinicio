@@ -1,0 +1,31 @@
+<h1>Crear Usuario</h1>
+<p>Crear un nuevo usuario.</p>
+
+<form action="/Usuario/crear-usuario"
+      method="POST">
+
+    <div>
+        <label for="nombre">Nombre</label><!--  input siempre con junto a un label -->
+        <input id="nombre"
+               name="nombre"
+               type="text">
+    </div>
+
+    <div>
+        <label for="biografia">Biografia</label>
+        <textarea name="biografia"
+                  id="biografia"
+                  cols="30"
+                  rows="3">
+        </textarea>
+    </div>
+
+    <button type="reset">Resetear Formulario</button>
+    <button>Crear Usuario</button>
+
+</form>
+
+<!-- Ir a otra pagina -->
+<a href="/Usuario/inicio">
+    <button>Regresar</button>
+</a>
