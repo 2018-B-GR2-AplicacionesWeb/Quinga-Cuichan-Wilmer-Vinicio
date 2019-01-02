@@ -1,5 +1,3 @@
-
-declare var require;
 const inquirer = require('inquirer');
 const fs = require('fs');
 const rxjs = require('rxjs');
@@ -325,10 +323,7 @@ const promesaEliminar = (respuestaBDD,indiceProducto) =>{
             resolve(respuestaBDD.splice(indiceProducto, 1))
         }
     )};
-
-
-main();
-
+main()
 interface RespuestaBDD {
     mensaje: string;
     bdd: BDD;
