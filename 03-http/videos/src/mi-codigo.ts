@@ -1,20 +1,14 @@
-//mi-codigo.ts
-//exportar variables
-export const a = 'a'; //Ts
-export let b = 'b';
-export var c = 'c';
+// mi-codigo.ts
 
+export const a = 'a';
+export let b = 'b';
+var c = 'c';
 export function f() {
 
 }
-
-export class Usuario {
-
-}
-
-export interface UsuarioInterface {
-
-}
+export class Usuario{}
+export interface UsuarioInterface{}
 
 
-module.exports = {};//js
+
+

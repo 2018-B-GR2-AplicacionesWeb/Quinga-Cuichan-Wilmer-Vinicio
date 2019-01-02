@@ -4,12 +4,12 @@ import {AppService} from './app.service';
 import {UsuarioService} from "./usuario.service";
 
 @Module({
-    imports: [],//modulos
-    controllers: [AppController], //controllers
-    providers: [//servicios
+    imports: [], // Modulos
+    controllers: [AppController], // Controllers
+    providers: [
         AppService,
-        UsuarioService // (usuario.service.ts)se encuentra registrados en el nest y se puede utilizar
-    ],
+        UsuarioService
+    ], // Servicios
 })
 export class AppModule {
 }

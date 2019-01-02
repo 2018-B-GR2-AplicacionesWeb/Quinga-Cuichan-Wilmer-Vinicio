@@ -1,141 +1,139 @@
 import {
-    Controller,
     Get,
-    HttpCode,
-    HttpException,
-    Param,
-    Query,
+    Controller,
     Request,
     Response,
     Headers,
+    HttpCode,
+    HttpException,
+    Query,
+    Param,
     Res,
     Post, Body
 } from '@nestjs/common';
 import {AppService} from './app.service';
 import {Observable, of} from "rxjs";
 import {Usuario, UsuarioService} from "./usuario.service";
-//import {Usuario} from "./mi-codigo";
 
-// controlador gestionaba el protocolo http, recive el request, y enviar el response
-//decorador -> funcion
-// se ejecuta antes de algo
-
-//http://192.168.1.2:3000/Usuario/saludar   Metodos -> get
-//http://192.168.1.2:3000/Notas/salir       metodo -> post
-//http://192.168.1.2:3000/Notas/registrar  metodo -> put
-//http://192.168.1.2:3000/Notas/borrar  metodo -> delete
-//http://192.168.1.2:3000/Notas
+// http://192.168.1.2:3000/Usuario/saludar     METODO -> GET
+// http://192.168.1.2:3000/Usuario/salir   METODO -> POST
+// http://192.168.1.2:3000/Usuario/registrar METODO -> PUT
+// http://192.168.1.2:3000/Usuario/borrar METODO -> DELETE
+// http://192.168.1.2:3000/Notas
 
 
-@Controller('Usuario') //decoradores
-
-
+// Decorador -> FUNCION
+// SE EJECUTA ANTES DE ALGO
+@Controller('Usuario') // Decoradores!
 export class AppController {
 
-    //importar servicios al controlador necesita estar registrados en el nesr
-
-    // constructor no es un constructor normal
+    // CONSTRUCTOR NO ES UN CONSTRUCTOR NORMAL!!!
 
     constructor(
-        private readonly _usuarioService: UsuarioService,)
-    // private readonly _appService:AppService
-    {
+        private readonly _usuarioService: UsuarioService,
+        // private readonly _appService:AppService,
+    ) {
+
     }
 
-
-    // nombre: String = 'Vinicio';
-
-
-    // @Get('saludar')
-
-    //saludar(): string {//metodo
-    //  return 'Hola Mundo'
-    //}
 
     @Get('saludar')
     saludar(
-        @Query() queryParams, //devuelve un json
+        @Query() queryParams,
         @Query('nombre') nombre,
         @Headers('seguridad') seguridad,
-    ): string {//metodo
+    ): string { // metodo!
         return nombre;
     }
 
-
-    // /Usuarios/segmentoUno/12/segmentoDos
+    // /Usuario/segmentoUno/12/segmentoDos
     @Get('segmentoUno/:idUsuario/segmentoDos')
-
     ruta(
-        @Param() todosParametrosRuta, //devuelve un json
+        @Param() todosParametrosRuta,
         @Param('idUsuario') idUsuario,
-    ): string {//metodo
+    ): string { // metodo!
         return idUsuario;
     }
 
 
     @Get('despedirse')
     @HttpCode(201)
-
-    despedirse(): Promise<String> {//metodo
-        return new Promise<String>(
+    despedirse(): Promise<string> {
+        return new Promise<string>(
             (resolve, reject) => {
-                //resolve('Adios');
-                //  reject('Error!')
+
                 throw new HttpException({
                         mensaje: 'Error en despedirse',
-                    }, 400
-                )
+                    },
+                    400);
             }
         );
     }
 
-    //nest por defecto 200 status code
     @Get('tomar')
     @HttpCode(201)
-
-    tomar(): string {//metodo
-        return 'Estoy Borracho'
+    tomar(): string { // metodo!
+        return 'Estoy borracho';
     }
 
     @Get('saludarObservable')
-
-    saludarObservable(): Observable<String> {//metodo
-        return of('Hola mundo Observable');
+    saludarObservable(): Observable<string> { // metodo!
+        return of('Hola mundo');
     }
 
-/////////////////////////////////////////////////////////////////////////////
-    //logica en el controlador,
-    //ejemplo
-    //cliente renderiza
+
     @Get('inicio')
     inicio(
-        @Res() response //todas las variables de la respuesta
-
+        @Res() response,
+        @Query('accion') accion: string,
+        @Query('nombre') nombre: string,
+        @Query('busqueda') busqueda: string,
     ) {
-        response.render('inicio', {//inicio.ejs
-            nombre: 'Vinicio',
-            arreglo: this._usuarioService.usuarios //llama a la nueva clase creada
+
+
+        let mensaje; // undefined
+
+        if (accion && nombre) {
+            switch (accion) {
+                case 'actualizar':
+                    mensaje = `Registro ${nombre} actualizado`;
+                    break;
+                case 'borrar':
+                    mensaje = `Registro ${nombre} eliminado`;
+                    break;
+                case 'crear':
+                    mensaje = `Registro ${nombre} creado`;
+                    break;
+            }
+        }
+
+        let usuarios: Usuario[];
+        if (busqueda) {
+            usuarios = this._usuarioService
+                .buscarPorNombreOBiografia(busqueda);
+        } else {
+            usuarios = this._usuarioService.usuarios
+        }
+
+        response.render('inicio', {
+            nombre: 'Adrian',
+            arreglo: usuarios,
+            mensaje: mensaje
         });
-
     }
 
-
-//metodo borrar
-    //query params, body params, parametros de ruta, parametros desde el cliente
-    @Post('borrar/:idUsuario')//parametros de ruta
+    @Post('borrar/:idUsuario')
     borrar(
-        @Param('idUsuario') idUsuario: String,
-        @Res() response //todas las variables de la respuesta, envia el resquet
-
+        @Param('idUsuario') idUsuario: string,
+        @Res() response
     ) {
+        const usuario = this._usuarioService
+            .borrar(Number(idUsuario));
 
-        this._usuarioService.borrar(Number(idUsuario));  //metodo en la clase usuario.service.ts
+        const parametrosConsulta = `?accion=borrar&nombre=${usuario.nombre}`;
 
-
-        response.redirect('/Usuario/inicio')//cuando se borrar un usuario se dirige a la misma pagina
-
+        response.redirect('/Usuario/inicio' + parametrosConsulta);
     }
-
 
     @Get('crear-usuario')
     crearUsuario(
@@ -146,6 +144,41 @@ export class AppController {
         )
     }
 
+    @Get('actualizar-usuario/:idUsuario')
+    actualizarUsuario(
+        @Param('idUsuario') idUsuario: string,
+        @Res() response
+    ) {
+        const usuarioAActualizar = this
+            ._usuarioService
+            .buscarPorId(Number(idUsuario));
+
+        response.render(
+            'crear-usuario', {
+                usuario: usuarioAActualizar
+            }
+        )
+    }
+
+
+    @Post('actualizar-usuario/:idUsuario')
+    actualizarUsuarioFormulario(
+        @Param('idUsuario') idUsuario: string,
+        @Res() response,
+        @Body() usuario: Usuario
+    ) {
+        usuario.id = +idUsuario;
+
+        this._usuarioService
+            .actualizar(+idUsuario, usuario);
+
+        const parametrosConsulta = `?accion=actualizar&nombre=${usuario.nombre}`;
+
+        response.redirect('/Usuario/inicio' + parametrosConsulta);
+
+    }
+
+
     @Post('crear-usuario')
     crearUsuarioFormulario(
         @Body() usuario: Usuario,
@@ -153,9 +186,10 @@ export class AppController {
     ) {
 
         this._usuarioService.crear(usuario);
-      //  response.redirect('/Usuario/inicio');
 
+        const parametrosConsulta = `?accion=crear&nombre=${usuario.nombre}`;
+
+        response.redirect('/Usuario/inicio' + parametrosConsulta)
     }
-
 
 }

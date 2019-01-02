@@ -1,71 +1,85 @@
 import {Injectable} from "@nestjs/common";
 
-//servicio, debe de tener la toda la  logica
 @Injectable()
 export class UsuarioService {
-
     usuarios: Usuario[] = [
         {
-            nombre: 'Vinicio',
+            nombre: 'Adrian',
             biografia: 'Doctor',
             id: 1
         },
         {
-            nombre: 'Wilmer',
+            nombre: 'Vicente',
             biografia: 'Maestro',
             id: 2
         },
         {
-            nombre: 'Joselyn',
+            nombre: 'Carolina',
             biografia: 'Diseñadora',
             id: 3
         }
     ];
-
     registroActual = 4;
 
-    //añadir nuevo usuario
     crear(nuevoUsuario: Usuario): Usuario {
         nuevoUsuario.id = this.registroActual;
         this.registroActual++;
-
-        this.usuarios.push();
+        this.usuarios.push(nuevoUsuario);
         return nuevoUsuario;
-
     }
 
-    //actualizar usuario
-    actualizar(idUsuario: number, nuevoUsuario: Usuario): Usuario {
-
-        const indiceUsuario = this
-            .usuarios
-            .findIndex(
-                (usuario) => usuario.id === Number(idUsuario)
-            );
-
-        this.usuarios[indiceUsuario] = nuevoUsuario;
-        return nuevoUsuario;
-
-
-    }
-    //borrar
-
-    borrar(idUsuario: number): Usuario {
-
+    actualizar(idUsuario: number,
+               nuevoUsuario: Usuario): Usuario {
         const indiceUsuario = this
             .usuarios
             .findIndex(
                 (usuario) => usuario.id === idUsuario
             );
+        this.usuarios[indiceUsuario] = nuevoUsuario;
+        return nuevoUsuario;
+    }
 
-        const usuarioBorrado = JSON.parse(JSON.stringify(this.usuarios[indiceUsuario]));//clonar un arreglo
+    borrar(idUsuario: number): Usuario {
+        const indiceUsuario = this
+            .usuarios
+            .findIndex(
+                (usuario) => usuario.id === idUsuario
+            );
+        const usuarioBorrado = JSON.parse(
+            JSON.stringify(this.usuarios[indiceUsuario])
+        );
         this.usuarios.splice(indiceUsuario, 1);
-
         return usuarioBorrado;
     }
 
-}
+    buscarPorId(idUsuario: number) {
+        return this.usuarios
+        // .find(u=>u.id === idUsuario);
+            .find(
+                (usuario) => {
+                    return usuario.id === idUsuario
+                }
+            );
+    }
 
+    buscarPorNombreOBiografia(busqueda:string): Usuario[]{
+        return this.usuarios.filter(
+            (usuario)=>{
+
+                // Si la busqueda contiene algo del nombre
+                const tieneAlgoEnElnombre = usuario
+                    .nombre.includes(busqueda); // True / False
+
+                // Si la busqueda contiene algo de la bio
+                const tieneAlgoEnLaBio = usuario
+                    .biografia.includes(busqueda);// True / False
+
+                return tieneAlgoEnElnombre || tieneAlgoEnLaBio;
+            }
+        )
+    }
+
+}
 
 export interface Usuario {
     id: number;
