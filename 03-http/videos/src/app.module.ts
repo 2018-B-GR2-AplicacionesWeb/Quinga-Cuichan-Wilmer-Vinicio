@@ -6,6 +6,7 @@ import {UsuarioModule} from "./usuario/usuario.module";
 import {TypeOrmModule} from '@nestjs/typeorm';
 import {UsuarioEntity} from "./usuario/usuario-entity";
 import {LibroEntity} from "./libro/libro.entity";
+import {PaginaEntity} from "./pagina/pagina.entity";
 
 @Module({
     imports: [
@@ -20,7 +21,8 @@ import {LibroEntity} from "./libro/libro.entity";
             dropSchema:false,//para una base de datos ya  creadaen true se borrar siempre los datos
             entities: [
                 UsuarioEntity,//tabla papa
-                LibroEntity
+                LibroEntity,
+                PaginaEntity
             ]
 
         }),
