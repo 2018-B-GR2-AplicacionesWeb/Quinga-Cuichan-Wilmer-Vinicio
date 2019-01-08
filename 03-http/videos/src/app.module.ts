@@ -5,19 +5,22 @@ import {UsuarioService} from "./usuario/usuario.service";
 import {UsuarioModule} from "./usuario/usuario.module";
 import {TypeOrmModule} from '@nestjs/typeorm';
 import {UsuarioEntity} from "./usuario/usuario-entity";
+import {LibroEntity} from "./libro/libro.entity";
 
 @Module({
     imports: [
         TypeOrmModule.forRoot({
             type: 'mysql',
-            host: '172.31.103.216',
+            host: '172.31.103.225',
             port: 3306,
             username: 'vinicioQ',
             password: '98765432',
             database: 'quingavinicio',
-            synchronize: true,
+            synchronize: true,//
+            dropSchema:false,//para una base de datos ya  creadaen true se borrar siempre los datos
             entities: [
-                UsuarioEntity
+                UsuarioEntity,//tabla papa
+                LibroEntity
             ]
 
         }),
