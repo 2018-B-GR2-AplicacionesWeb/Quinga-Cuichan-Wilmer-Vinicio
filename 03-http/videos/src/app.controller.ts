@@ -1,3 +1,5 @@
+//principal
+
 import {
     Get,
     Controller,
@@ -9,29 +11,21 @@ import {
     Query,
     Param,
     Res,
-    Post, Body
+    Post, Body, Session, BadRequestException
 } from '@nestjs/common';
 import {AppService} from './app.service';
 import {Observable, of} from "rxjs";
 import {Usuario, UsuarioService} from "./usuario/usuario.service";
-
-// http://192.168.1.2:3000/Usuario/saludar     METODO -> GET
-// http://192.168.1.2:3000/Usuario/salir   METODO -> POST
-// http://192.168.1.2:3000/Usuario/registrar METODO -> PUT
-// http://192.168.1.2:3000/Usuario/borrar METODO -> DELETE
-// http://192.168.1.2:3000/Notas
+import * as ts from "typescript/lib/tsserverlibrary";
 
 
-// Decorador -> FUNCION
-// SE EJECUTA ANTES DE ALGO
-@Controller() // Decoradores!
+@Controller()
+
 export class AppController {
 
-    // CONSTRUCTOR NO ES UN CONSTRUCTOR NORMAL!!!
 
     constructor(
         private readonly _usuarioService: UsuarioService,
-        // private readonly _appService:AppService,
     ) {
 
     }
@@ -42,9 +36,13 @@ export class AppController {
         @Query() queryParams,
         @Query('nombre') nombre,
         @Headers('seguridad') seguridad,
+        @Session() sesion
     ): string { // metodo!
+        console.log('sesion', sesion);
+
         return nombre;
     }
+
 
     // /Usuario/segmentoUno/12/segmentoDos
     @Get('segmentoUno/:idUsuario/segmentoDos')
@@ -70,11 +68,13 @@ export class AppController {
         );
     }
 
+
     @Get('tomar')
     @HttpCode(201)
     tomar(): string { // metodo!
         return 'Estoy borracho';
     }
+
 
     @Get('saludarObservable')
     saludarObservable(): Observable<string> { // metodo!
@@ -82,5 +82,36 @@ export class AppController {
     }
 
 
+    //login
+    @Post('login')
+    @HttpCode(200)
+    async loginMetodo(//recive los datos
+        //cuando se manda del formulario es tipo body
+        @Body('username') username: string,
+        @Body('password') password: string,
+        @Res() response,
+        @Session() sesion
+    ) {
+        const identificado = await this._usuarioService
+            .login(username, password);
+
+        if (identificado) {
+
+            sesion.usuarios = username;
+            response.redirect('/saludar');
+
+        } else {
+            throw new BadRequestException({mensaje: 'Error login'})
+        }
+
+    }
+
+    //mostrar la interfaz
+    @Get('login')
+    loginVista(
+        @Res() response
+    ) {
+        response.render('login');
+    }
 
 }

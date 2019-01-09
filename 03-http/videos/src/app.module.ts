@@ -18,7 +18,7 @@ import {PaginaEntity} from "./pagina/pagina.entity";
             password: '98765432',
             database: 'quingavinicio',
             synchronize: true,//
-            dropSchema:false,//para una base de datos ya  creadaen true se borrar siempre los datos
+            dropSchema: false,//para una base de datos ya  creadaen true se borrar siempre los datos
             entities: [
                 UsuarioEntity,//tabla papa
                 LibroEntity,
@@ -28,10 +28,17 @@ import {PaginaEntity} from "./pagina/pagina.entity";
         }),
         UsuarioModule
     ], // Modulos
-    controllers: [AppController], // Controllers
+
+
+    controllers: [
+        AppController
+    ], // Controllers
+
+
     providers: [
         AppService,
     ], // Servicios
+
 })
 export class AppModule {
 }

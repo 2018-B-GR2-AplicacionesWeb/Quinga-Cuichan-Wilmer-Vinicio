@@ -27,6 +27,14 @@ export class UsuarioEntity {
     )
     biografia: string;
 
+
+    @Column()
+    username: string;
+
+    @Column()
+    password: string;
+
+
     @BeforeInsert()//trigger
     antesDeInsertar() {
         console.log('Ejecutandose antes de insertar');

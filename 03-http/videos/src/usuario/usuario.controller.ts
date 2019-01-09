@@ -6,10 +6,13 @@ import {UsuarioEntity} from "./usuario-entity";
 import {Like} from "typeorm";
 
 
-//un controlador
+ // Decorador -> FUNCION
+// SE EJECUTA ANTES DE ALGO
 @Controller('Usuario')
 
 export class UsuarioController {
+
+    // CONSTRUCTOR NO ES UN CONSTRUCTOR NORMAL!!!
 
     constructor(
         private readonly _usuarioService: UsuarioService,
@@ -66,7 +69,7 @@ export class UsuarioController {
         }
 
         response.render('inicio', {
-            nombre: 'Adrian',
+            nombre: 'Vinicio',
             arreglo: usuarios,
             mensaje: mensaje
         });
