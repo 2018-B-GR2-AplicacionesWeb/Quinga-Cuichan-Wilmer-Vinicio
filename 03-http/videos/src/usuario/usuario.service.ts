@@ -1,5 +1,6 @@
 import {Inject, Injectable} from "@nestjs/common";
-import {FindManyOptions, Repository} from "typeorm";
+import {FindManyOptions} from "../../node_modules/typeorm/find-options/FindManyOptions";
+import {Repository} from "typeorm";
 import {UsuarioEntity} from "./usuario-entity";
 import {InjectRepository} from "@nestjs/typeorm";
 
@@ -97,6 +98,9 @@ export class UsuarioService {
             }
         )
     }
+
+
+
 
 }
 

@@ -46,14 +46,15 @@ export class UsuarioController {
         let usuarios: UsuarioEntity[];
         if (busqueda) {
 
-
             const consulta = {
                 where: [
                     {
-                        nombre : Like (`%${busqueda}$%`)
+                        nombre: busqueda,
+                        // nombre: Like(`%${busqueda}$%`)
                     },
                     {
-                        biografia: Like (`%${busqueda}$%`)
+                        biografia: busqueda,
+                        // biografia: Like(`%${busqueda}$%`)
                     }
 
                 ]
