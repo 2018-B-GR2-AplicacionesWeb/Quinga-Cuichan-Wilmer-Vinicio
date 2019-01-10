@@ -46,9 +46,9 @@ export class UsuarioEntity {
     }
 
     @OneToMany(//uno a muchos
-        type => LibroEntity, //tipo de datos un usuario libro
+        type => LibroEntity, //tipo de datos un usuario libro Un usuario tiene varios libros
         libro => libro.usuario //cual es la campo FK
     )
-
     libros: LibroEntity[];
+
 }

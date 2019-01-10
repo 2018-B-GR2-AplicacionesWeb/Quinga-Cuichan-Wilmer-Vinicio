@@ -4,12 +4,14 @@ import {Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn} from "type
 import {UsuarioEntity} from "../usuario/usuario-entity";
 import {PaginaEntity} from "../pagina/pagina.entity";
 
+//entidad nombre de la tabla LIBRO
 @Entity('libro')
 export class LibroEntity {
 
-    @PrimaryGeneratedColumn()
+    @PrimaryGeneratedColumn()//identificador
     id: number;
 
+     //columna
     @Column(
         {
             name: 'nombre',
@@ -17,11 +19,10 @@ export class LibroEntity {
             length: 50
         }
     )
-
     nombre: string;
 
 
-    @ManyToOne(//muchos a uno
+    @ManyToOne(// relacion muchos a uno
         type => UsuarioEntity, //tipo relacion de muchos a unos
         usuario => usuario.libros //cual donde se guarda
     )

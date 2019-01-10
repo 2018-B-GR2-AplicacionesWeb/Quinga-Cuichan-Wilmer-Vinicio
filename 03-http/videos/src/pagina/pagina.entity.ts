@@ -2,7 +2,7 @@ import {Column, Entity, ManyToOne, PrimaryGeneratedColumn} from "typeorm";
 import {LibroEntity} from "../libro/libro.entity";
 
 
-@Entity('')
+@Entity('pagina')
 export class PaginaEntity {
     @PrimaryGeneratedColumn()
     id: number;
