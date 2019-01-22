@@ -1,25 +1,17 @@
-//usuario.controller.ts
-
+// usuario.controller.ts
 import {Body, Controller, Get, Param, Post, Query, Res} from "@nestjs/common";
 import {Usuario, UsuarioService} from "./usuario.service";
 import {UsuarioEntity} from "./usuario-entity";
 import {Like} from "typeorm";
 
-
- // Decorador -> FUNCION
-// SE EJECUTA ANTES DE ALGO
 @Controller('Usuario')
-
 export class UsuarioController {
-
-    // CONSTRUCTOR NO ES UN CONSTRUCTOR NORMAL!!!
 
     constructor(
         private readonly _usuarioService: UsuarioService,
     ) {
 
     }
-
 
     @Get('inicio')
     async inicio(
@@ -31,16 +23,20 @@ export class UsuarioController {
 
 
         let mensaje; // undefined
+        let clase; // undefined
 
         if (accion && nombre) {
             switch (accion) {
                 case 'actualizar':
+                    clase = 'info';
                     mensaje = `Registro ${nombre} actualizado`;
                     break;
                 case 'borrar':
+                    clase = 'danger';
                     mensaje = `Registro ${nombre} eliminado`;
                     break;
                 case 'crear':
+                    clase = 'success';
                     mensaje = `Registro ${nombre} creado`;
                     break;
             }
@@ -52,26 +48,23 @@ export class UsuarioController {
             const consulta = {
                 where: [
                     {
-                        nombre: busqueda,
-                        // nombre: Like(`%${busqueda}$%`)
+                        nombre: Like(`%${busqueda}%`)
                     },
                     {
-                        biografia: busqueda,
-                        // biografia: Like(`%${busqueda}$%`)
+                        biografia: Like(`%${busqueda}%`)
                     }
-
                 ]
-
             };
             usuarios = await this._usuarioService.buscar(consulta);
         } else {
-            usuarios = await this._usuarioService.buscar()
+            usuarios = await this._usuarioService.buscar();
         }
 
         response.render('inicio', {
-            nombre: 'Vinicio',
+            nombre: 'Adrian',
             arreglo: usuarios,
-            mensaje: mensaje
+            mensaje: mensaje,
+            accion: clase
         });
     }
 
@@ -83,10 +76,9 @@ export class UsuarioController {
         const usuarioEncontrado = await this._usuarioService
             .buscarPorId(+idUsuario);
 
-        const usuario = await this._usuarioService
-            .borrar(Number(idUsuario));
+        await this._usuarioService.borrar(Number(idUsuario));
 
-        const parametrosConsulta = `?accion=borrar&nombre=${usuario.nombre}`;
+        const parametrosConsulta = `?accion=borrar&nombre=${usuarioEncontrado.nombre}`;
 
         response.redirect('/Usuario/inicio' + parametrosConsulta);
     }
@@ -125,8 +117,7 @@ export class UsuarioController {
     ) {
         usuario.id = +idUsuario;
 
-        await this._usuarioService
-            .actualizar(+idUsuario, usuario);
+        await this._usuarioService.actualizar(+idUsuario, usuario);
 
         const parametrosConsulta = `?accion=actualizar&nombre=${usuario.nombre}`;
 
@@ -147,7 +138,16 @@ export class UsuarioController {
 
         response.redirect('/Usuario/inicio' + parametrosConsulta)
     }
-
-
 }
+
+
+
+
+
+
+
+
+
+
+
 

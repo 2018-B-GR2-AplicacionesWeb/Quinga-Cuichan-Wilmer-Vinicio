@@ -1,5 +1,3 @@
-//principal
-
 import {
     Get,
     Controller,
@@ -16,16 +14,26 @@ import {
 import {AppService} from './app.service';
 import {Observable, of} from "rxjs";
 import {Usuario, UsuarioService} from "./usuario/usuario.service";
-import * as ts from "typescript/lib/tsserverlibrary";
+import {ExpressionStatement} from "typescript";
+import {Code} from "typeorm";
+
+// http://192.168.1.2:3000/Usuario/saludar     METODO -> GET
+// http://192.168.1.2:3000/Usuario/salir   METODO -> POST
+// http://192.168.1.2:3000/Usuario/registrar METODO -> PUT
+// http://192.168.1.2:3000/Usuario/borrar METODO -> DELETE
+// http://192.168.1.2:3000/Notas
 
 
-@Controller()
-
+// Decorador -> FUNCION
+// SE EJECUTA ANTES DE ALGO
+@Controller() // Decoradores!
 export class AppController {
 
+    // CONSTRUCTOR NO ES UN CONSTRUCTOR NORMAL!!!
 
     constructor(
         private readonly _usuarioService: UsuarioService,
+        // private readonly _appService:AppService,
     ) {
 
     }
@@ -38,11 +46,10 @@ export class AppController {
         @Headers('seguridad') seguridad,
         @Session() sesion
     ): string { // metodo!
-        console.log('sesion', sesion);
+        console.log('Sesion:', sesion);
 
         return nombre;
     }
-
 
     // /Usuario/segmentoUno/12/segmentoDos
     @Get('segmentoUno/:idUsuario/segmentoDos')
@@ -68,25 +75,20 @@ export class AppController {
         );
     }
 
-
     @Get('tomar')
     @HttpCode(201)
     tomar(): string { // metodo!
         return 'Estoy borracho';
     }
 
-
     @Get('saludarObservable')
     saludarObservable(): Observable<string> { // metodo!
         return of('Hola mundo');
     }
 
-
-    //login
     @Post('login')
     @HttpCode(200)
-    async loginMetodo(//recive los datos
-        //cuando se manda del formulario es tipo body
+    async loginMetodo(
         @Body('username') username: string,
         @Body('password') password: string,
         @Res() response,
@@ -97,8 +99,9 @@ export class AppController {
 
         if (identificado) {
 
-            sesion.usuarios = username;
-            response.redirect('/saludar');
+            sesion.usuario = username;
+
+            response.redirect('/saludar')
 
         } else {
             throw new BadRequestException({mensaje: 'Error login'})
@@ -106,12 +109,23 @@ export class AppController {
 
     }
 
-    //mostrar la interfaz
     @Get('login')
     loginVista(
         @Res() response
     ) {
         response.render('login');
     }
+
+    @Get('logout')
+    logout(
+        @Res() response,
+        @Session() sesion,
+    ) {
+        sesion.usuario = undefined;
+        sesion.destroy();
+        response.redirect('/login');
+
+    }
+
 
 }

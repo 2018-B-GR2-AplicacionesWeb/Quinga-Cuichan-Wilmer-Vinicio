@@ -1,6 +1,7 @@
+// usuario-entity.ts
+
 import {BeforeInsert, Column, Entity, Index, OneToMany, PrimaryGeneratedColumn} from "typeorm";
 import {LibroEntity} from "../libro/libro.entity";
-
 
 @Entity('db_usuario')
 export class UsuarioEntity {
@@ -8,8 +9,7 @@ export class UsuarioEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
-
-    @Index()//buscar
+    @Index()
     @Column(
         {
             name: 'nombre_primero',
@@ -20,35 +20,37 @@ export class UsuarioEntity {
     )
     nombre: string;
 
-    @Column(
-        {
-            nullable: true,//valor nulo
-        }
-    )
+    @Column({
+        nullable: true,
+    })
     biografia: string;
 
-
-    @Column()
+    @Column({
+        nullable: true
+    })
     username: string;
 
-    @Column()
+    @Column({
+        nullable: true
+    })
     password: string;
 
-
-    @BeforeInsert()//trigger
+    @BeforeInsert()
     antesDeInsertar() {
-        console.log('Ejecutandose antes de insertar');
+        console.log('Ejecutandome antes de insertar');
     }
 
-    @BeforeInsert()//trigger
+    @BeforeInsert()
     verificarFuncion() {
-        console.log('Ejecuta despues de antes de insetar');
+        console.log('Ejecuta despues de antes de insertar');
     }
 
-    @OneToMany(//uno a muchos
-        type => LibroEntity, //tipo de datos un usuario libro Un usuario tiene varios libros
-        libro => libro.usuario //cual es la campo FK
+    @OneToMany(
+        type => LibroEntity, // Tipo de Dato Un Usuario a muchos
+        // Libros[]
+        libro => libro.usuario // Cual es el campo FK
     )
     libros: LibroEntity[];
+
 
 }

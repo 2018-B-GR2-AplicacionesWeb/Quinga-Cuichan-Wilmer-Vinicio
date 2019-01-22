@@ -1,8 +1,8 @@
-import {Inject, Injectable} from "@nestjs/common";
-import {FindManyOptions} from "../../node_modules/typeorm/find-options/FindManyOptions";
+import {Injectable} from "@nestjs/common";
 import {Repository} from "typeorm";
+import {InjectRepository} from '@nestjs/typeorm';
 import {UsuarioEntity} from "./usuario-entity";
-import {InjectRepository} from "@nestjs/typeorm";
+import {FindManyOptions} from "../../node_modules/typeorm/find-options/FindManyOptions";
 
 @Injectable()
 export class UsuarioService {
@@ -25,61 +25,55 @@ export class UsuarioService {
     ];
     registroActual = 4;
 
-    //constructores nest
-    //Inyectar dependencias
-
+    // Inyectar Dependencias
     constructor(
         @InjectRepository(UsuarioEntity)
         private readonly _usuarioRepository: Repository<UsuarioEntity>,
     ) {
-
     }
-
 
     buscar(parametros?: FindManyOptions<UsuarioEntity>)
         : Promise<UsuarioEntity[]> {
         return this._usuarioRepository.find(parametros);
     }
 
-
     async crear(nuevoUsuario: Usuario): Promise<UsuarioEntity> {
 
-        //instanciar una entidad -> create()
+        // Instanciar una entidad -> .create()
         const usuarioEntity = this._usuarioRepository
             .create(nuevoUsuario);
 
-        //guardar una entidad en la base de datos -> sabe
+        // Guardar una entidad en la BDD -> .save()
         const usuarioCreado = await this._usuarioRepository
             .save(usuarioEntity);
 
         return usuarioCreado;
     }
 
-
     actualizar(idUsuario: number,
                nuevoUsuario: Usuario): Promise<UsuarioEntity> {
 
         nuevoUsuario.id = idUsuario;
+
         const usuarioEntity = this._usuarioRepository.create(nuevoUsuario);
-        return this._usuarioRepository.save(usuarioEntity)
 
+        return this._usuarioRepository.save(usuarioEntity);
     }
-
 
     borrar(idUsuario: number): Promise<UsuarioEntity> {
 
-        //crea una instanica de le entidad
-        const usuarioEntityAEliminar = this._usuarioRepository.create(
-            {
+        // CREA UNA INSTANCIA DE LA ENTIDAD
+        const usuarioEntityAEliminar = this._usuarioRepository
+            .create({
                 id: idUsuario
-            }
-        );
+            });
+
+
         return this._usuarioRepository.remove(usuarioEntityAEliminar)
     }
 
-
     buscarPorId(idUsuario: number): Promise<UsuarioEntity> {
-        return this._usuarioRepository.findOne(idUsuario);//acepta el identificador
+        return this._usuarioRepository.findOne(idUsuario);
     }
 
     buscarPorNombreOBiografia(busqueda: string): Usuario[] {
@@ -98,7 +92,6 @@ export class UsuarioService {
             }
         )
     }
-
 
     async login(username: string, password: string)
         : Promise<boolean> {
@@ -126,12 +119,7 @@ export class UsuarioService {
 
     }
 
-
-
 }
-
-
-
 
 export interface Usuario {
     id: number;

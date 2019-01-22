@@ -1,20 +1,19 @@
-//usuario.module.ts
-//decorador para modulos
+// usuario.module.ts
 
-//logica del controlador aqui
 import {Module} from "@nestjs/common";
 import {UsuarioService} from "./usuario.service";
 import {UsuarioController} from "./usuario.controller";
 import {TypeOrmModule} from '@nestjs/typeorm';
 import {UsuarioEntity} from "./usuario-entity";
 
-
 @Module({
     imports: [
-        //repositorio
+        // Repositorio
         TypeOrmModule
             .forFeature(
-                [UsuarioEntity]
+                [
+                    UsuarioEntity
+                ]
             )
     ],
     controllers: [
@@ -26,9 +25,6 @@ import {UsuarioEntity} from "./usuario-entity";
     exports: [
         UsuarioService
     ]
-
 })
-
 export class UsuarioModule {
-
 }
