@@ -5,7 +5,7 @@ import {UsuarioModule} from "./usuario/usuario.module";
 import {TypeOrmModule} from '@nestjs/typeorm';
 import {UsuarioEntity} from "./usuario/usuario-entity";
 import {LibroEntity} from "./libro/libro.entity";
-import {PaginaEntity} from './pagina/pagina.entity';
+import {PaginaEntity} from "./pagina/pagina.entity";
 
 @Module({
     imports: [
@@ -14,9 +14,9 @@ import {PaginaEntity} from './pagina/pagina.entity';
                 type: 'mysql',
                 host: 'localhost',
                 port: 3306,
-                username: 'vinicioQ',
-                password: '98765432',
-                database: 'quingavinicio',
+                username: 'adrian',
+                password: 'root',
+                database: 'web-adrian',
                 synchronize: true,
                 dropSchema: false,
                 entities: [
