@@ -14,9 +14,9 @@ import {PaginaEntity} from "./pagina/pagina.entity";
                 type: 'mysql',
                 host: 'localhost',
                 port: 3306,
-                username: 'adrian',
-                password: 'root',
-                database: 'web-adrian',
+                username: 'vinicioQ',
+                password: '98765432',
+                database: 'webproject',
                 synchronize: true,
                 dropSchema: false,
                 entities: [
